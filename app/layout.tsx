@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Rubik, Open_Sans } from "next/font/google";
 import { ReduxProvider } from "@/store/Provider";
+import { Header } from "@/components/common/Header";
+import { Footer } from "@/components/common/Footer";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
+const rubik = Rubik({ subsets: ["latin"], variable: "--font-sans" });
+const openSans = Open_Sans({ subsets: ["latin"], variable: "--font-body" });
 
 export const metadata: Metadata = {
   title: "KICKS — Premium Sneakers & Athletic Footwear",
@@ -17,9 +20,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={inter.variable}>
+    <html lang="en" className={`${rubik.variable} ${openSans.variable}`}>
       <body className="antialiased font-sans">
-        <ReduxProvider>{children}</ReduxProvider>
+        <ReduxProvider>
+          <Header />
+          {children}
+          <Footer />
+        </ReduxProvider>
       </body>
     </html>
   );

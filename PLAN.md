@@ -10,7 +10,7 @@
 | Stage | Title | Status |
 |-------|-------|--------|
 | 1 | Infrastructure & Foundation | ✅ Complete |
-| 2 | Shared Components | ⬜ Not Started |
+| 2 | Shared Components | ✅ Complete |
 | 3 | Landing Page | ⬜ Not Started |
 | 4 | Product Detail Page | ⬜ Not Started |
 | 5 | Shopping Cart (Bonus) | ⬜ Not Started |
@@ -272,7 +272,7 @@
 ## Stage Completion Checklist
 
 - [x] ✅ Stage 1 — Infrastructure & Foundation
-- [ ] ✅ Stage 2 — Shared Components
+- [x] ✅ Stage 2 — Shared Components
 - [ ] ✅ Stage 3 — Landing Page
 - [ ] ✅ Stage 4 — Product Detail Page
 - [ ] ✅ Stage 5 — Shopping Cart
