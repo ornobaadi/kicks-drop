@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { KicksLogo } from '@/components/common/KicksLogo';
 
-const CATEGORIES = ['Runners', 'Sneakers', 'Basketball', 'Outdoor', 'Golf', 'Hiking'];
+const CATEGORIES = ['Clothing', 'Electronics', 'Furniture', 'Accessories', 'Outdoors', 'Lifestyle'];
 const COMPANY = ['About', 'Contact', 'Blogs'];
 
 const SOCIAL = [

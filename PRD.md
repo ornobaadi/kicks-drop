@@ -32,7 +32,7 @@
 
 ### Project Description
 
-KICKS is a modern e-commerce platform specializing in sneakers and athletic footwear. This project involves building a responsive, high-performance frontend application that translates Figma design specifications into a production-ready React/Next.js application with seamless API integration.
+KICKS DROP is a modern multi-category e-commerce platform. This project involves building a responsive, high-performance frontend application that translates Figma design specifications into a production-ready React/Next.js application with seamless API integration.
 
 ### Key Objectives
 
@@ -396,7 +396,7 @@ GET https://fakeapi.platzi.com/en/rest/categories/
 
 **Components:**
 - About Us section with description
-- Categories links: Runners, Sneakers, Basketball, Outdoor, Golf, Hiking
+- Categories links: Clothing, Electronics, Furniture, Accessories, Outdoors, Lifestyle
 - Company links: About, Contact, Blogs
 - Social media icons: Facebook, Instagram, Twitter, TikTok
 - Large KICKS logo

@@ -6,9 +6,12 @@ const initialState: ProductsState = {
   items: [],
   selectedProduct: null,
   relatedProducts: [],
+  catalogItems: [],
   loading: false,
   relatedLoading: false,
+  catalogLoading: false,
   error: null,
+  catalogError: null,
 };
 
 export const fetchProducts = createAsyncThunk(
@@ -16,6 +19,32 @@ export const fetchProducts = createAsyncThunk(
   async (limit: number = 20, { rejectWithValue }) => {
     try {
       const res = await productsAPI.getAll(limit);
+      return res.data;
+    } catch (err: unknown) {
+      return rejectWithValue((err as Error).message);
+    }
+  }
+);
+
+/** Fetches ALL products for the catalog page (up to 100) */
+export const fetchCatalogProducts = createAsyncThunk(
+  'products/fetchCatalog',
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await productsAPI.getAll100();
+      return res.data;
+    } catch (err: unknown) {
+      return rejectWithValue((err as Error).message);
+    }
+  }
+);
+
+/** Fetches products filtered by category for the catalog page */
+export const fetchCatalogByCategory = createAsyncThunk(
+  'products/fetchCatalogByCategory',
+  async (categoryId: number, { rejectWithValue }) => {
+    try {
+      const res = await productsAPI.getByCategory(categoryId, 50);
       return res.data;
     } catch (err: unknown) {
       return rejectWithValue((err as Error).message);
@@ -57,6 +86,10 @@ const productsSlice = createSlice({
     clearSelectedProduct(state) {
       state.selectedProduct = null;
     },
+    clearCatalog(state) {
+      state.catalogItems = [];
+      state.catalogError = null;
+    },
   },
   extraReducers: (builder) => {
     // fetchProducts
@@ -72,6 +105,36 @@ const productsSlice = createSlice({
       .addCase(fetchProducts.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
+      });
+
+    // fetchCatalogProducts (all 100)
+    builder
+      .addCase(fetchCatalogProducts.pending, (state) => {
+        state.catalogLoading = true;
+        state.catalogError = null;
+      })
+      .addCase(fetchCatalogProducts.fulfilled, (state, action) => {
+        state.catalogLoading = false;
+        state.catalogItems = action.payload as Product[];
+      })
+      .addCase(fetchCatalogProducts.rejected, (state, action) => {
+        state.catalogLoading = false;
+        state.catalogError = action.payload as string;
+      });
+
+    // fetchCatalogByCategory
+    builder
+      .addCase(fetchCatalogByCategory.pending, (state) => {
+        state.catalogLoading = true;
+        state.catalogError = null;
+      })
+      .addCase(fetchCatalogByCategory.fulfilled, (state, action) => {
+        state.catalogLoading = false;
+        state.catalogItems = action.payload as Product[];
+      })
+      .addCase(fetchCatalogByCategory.rejected, (state, action) => {
+        state.catalogLoading = false;
+        state.catalogError = action.payload as string;
       });
 
     // fetchProductById
@@ -106,5 +169,5 @@ const productsSlice = createSlice({
   },
 });
 
-export const { clearSelectedProduct } = productsSlice.actions;
+export const { clearSelectedProduct, clearCatalog } = productsSlice.actions;
 export default productsSlice.reducer;

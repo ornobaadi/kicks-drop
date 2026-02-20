@@ -20,11 +20,12 @@ export default function NotFound() {
             <span className="text-[#4B5BFF]">0</span>
             4
           </span>
-          {/* Floating shoe emoji */}
+          {/* Floating question mark */}
           <span
             className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-6xl sm:text-8xl pointer-events-none opacity-20"
             aria-hidden
           >
+            ?
           </span>
         </div>
 
@@ -36,7 +37,7 @@ export default function NotFound() {
           className="text-gray-500 text-base mb-8 max-w-sm mx-auto leading-relaxed"
           style={{ fontFamily: 'var(--font-body)' }}
         >
-          The sneaker you&apos;re looking for has dropped off our shelves — or maybe it never existed.
+          The page you&apos;re looking for has left the building — or maybe it never existed.
         </p>
 
         {/* CTAs */}

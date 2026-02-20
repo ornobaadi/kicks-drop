@@ -24,10 +24,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { id } = await params;
   const product = await fetchProduct(id);
   if (!product) {
-    return { title: 'Product Not Found | KICKS' };
+    return { title: 'Product Not Found | KICKS DROP' };
   }
   return {
-    title: `${product.title} | KICKS`,
+    title: `${product.title} | KICKS DROP`,
     description: product.description.slice(0, 155),
   };
 }

@@ -1,6 +1,6 @@
-# KICKS — Premium Sneakers & Athletic Footwear
+# KICKS DROP — Shop Everything
 
-A modern sneaker e-commerce storefront built with Next.js 15, Redux Toolkit, and Tailwind CSS v4. Powered by the [Platzi Fake Store API](https://api.escuelajs.co/api/v1).
+A modern multi-category e-commerce storefront built with Next.js 15, Redux Toolkit, and Tailwind CSS v4. Powered by the [Platzi Fake Store API](https://api.escuelajs.co/api/v1). Featuring clothing, electronics, furniture, accessories, and more.
 
 ---
 

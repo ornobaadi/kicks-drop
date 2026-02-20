@@ -46,12 +46,12 @@ export function CategoryCardSkeleton() {
   );
 }
 
-export function SectionSkeleton() {
+export function SectionSkeleton({ count = 4 }: { count?: number }) {
   return (
-    <div className="space-y-6 py-12 px-4">
+    <div className="space-y-6 py-12 px-4 max-w-7xl mx-auto">
       <Pulse className="h-8 w-48" />
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {Array.from({ length: 4 }).map((_, i) => (
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        {Array.from({ length: count }).map((_, i) => (
           <ProductCardSkeleton key={i} />
         ))}
       </div>

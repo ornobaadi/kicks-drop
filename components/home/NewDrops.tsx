@@ -13,10 +13,10 @@ export function NewDrops() {
   const items = Array.isArray(rawItems) ? rawItems : [];
 
   useEffect(() => {
-    if (items.length === 0) dispatch(fetchProducts(8));
+    if (items.length === 0) dispatch(fetchProducts(20));
   }, [dispatch, items.length]);
 
-  const products = items.filter((p) => p.images?.length > 0 && p.images[0]).slice(0, 4);
+  const products = items.filter((p) => p.images?.length > 0 && p.images[0]).slice(0, 8);
 
   return (
     <section id="new-drops" className="bg-white px-4 sm:px-6 py-14">
@@ -53,7 +53,7 @@ export function NewDrops() {
             </button>
           </div>
         ) : loading && products.length === 0 ? (
-          <ProductGridSkeleton count={4} />
+          <ProductGridSkeleton count={8} />
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {products.map((p) => (

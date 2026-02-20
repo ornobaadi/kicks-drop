@@ -10,8 +10,8 @@ const REVIEWS = [
     date: 'Feb 10, 2026',
   },
   {
-    title: 'Best Sneakers I\'ve Owned',
-    text: 'Fit perfectly right out of the box — no break-in period needed. The colorways are fire and the materials feel premium.',
+    title: 'Best Purchase I\'ve Made',
+    text: 'Exactly as described — no surprises. The quality is fire and the materials feel premium. Kicks Drop never disappoints.',
     rating: 5,
     avatar: 'https://i.pravatar.cc/40?img=12',
     name: 'James T.',
@@ -19,7 +19,7 @@ const REVIEWS = [
   },
   {
     title: 'Lightning Fast Delivery',
-    text: 'Ordered Sunday, arrived Tuesday. The packaging was immaculate and the shoe matched the photos perfectly. 10/10 will buy again.',
+    text: 'Ordered Sunday, arrived Tuesday. The packaging was immaculate and the product matched the photos perfectly. 10/10 will buy again.',
     rating: 5,
     avatar: 'https://i.pravatar.cc/40?img=22',
     name: 'Alex R.',

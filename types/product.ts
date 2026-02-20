@@ -23,7 +23,11 @@ export interface ProductsState {
   items: Product[];
   selectedProduct: Product | null;
   relatedProducts: Product[];
+  /** All products fetched for the catalog page */
+  catalogItems: Product[];
   loading: boolean;
   relatedLoading: boolean;
+  catalogLoading: boolean;
   error: string | null;
+  catalogError: string | null;
 }

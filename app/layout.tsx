@@ -9,9 +9,9 @@ const rubik = Rubik({ subsets: ["latin"], variable: "--font-sans" });
 const openSans = Open_Sans({ subsets: ["latin"], variable: "--font-body" });
 
 export const metadata: Metadata = {
-  title: "KICKS — Premium Sneakers & Athletic Footwear",
+  title: "KICKS DROP — Shop Everything",
   description:
-    "Shop the latest sneakers and athletic footwear at KICKS. Free shipping & returns.",
+    "Shop the latest drops across clothing, electronics, furniture, accessories and more at Kicks Drop. Free shipping & returns.",
 };
 
 export default function RootLayout({
