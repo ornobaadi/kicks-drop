@@ -11,8 +11,8 @@
 |-------|-------|--------|
 | 1 | Infrastructure & Foundation | ✅ Complete |
 | 2 | Shared Components | ✅ Complete |
-| 3 | Landing Page | ⬜ Not Started |
-| 4 | Product Detail Page | ⬜ Not Started |
+| 3 | Landing Page | ✅ Complete |
+| 4 | Product Detail Page | ✅ Complete |
 | 5 | Shopping Cart (Bonus) | ⬜ Not Started |
 | 6 | Polish & Deploy | ⬜ Not Started |
 
@@ -273,7 +273,7 @@
 
 - [x] ✅ Stage 1 — Infrastructure & Foundation
 - [x] ✅ Stage 2 — Shared Components
-- [ ] ✅ Stage 3 — Landing Page
-- [ ] ✅ Stage 4 — Product Detail Page
+- [x] ✅ Stage 3 — Landing Page
+- [x] ✅ Stage 4 — Product Detail Page
 - [ ] ✅ Stage 5 — Shopping Cart
 - [ ] ✅ Stage 6 — Polish & Deploy

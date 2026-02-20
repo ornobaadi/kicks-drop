@@ -24,5 +24,6 @@ export interface ProductsState {
   selectedProduct: Product | null;
   relatedProducts: Product[];
   loading: boolean;
+  relatedLoading: boolean;
   error: string | null;
 }

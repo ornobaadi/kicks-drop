@@ -7,6 +7,7 @@ const initialState: ProductsState = {
   selectedProduct: null,
   relatedProducts: [],
   loading: false,
+  relatedLoading: false,
   error: null,
 };
 
@@ -91,15 +92,15 @@ const productsSlice = createSlice({
     // fetchProductsByCategory
     builder
       .addCase(fetchProductsByCategory.pending, (state) => {
-        state.loading = true;
+        state.relatedLoading = true;
         state.error = null;
       })
       .addCase(fetchProductsByCategory.fulfilled, (state, action) => {
-        state.loading = false;
+        state.relatedLoading = false;
         state.relatedProducts = action.payload as Product[];
       })
       .addCase(fetchProductsByCategory.rejected, (state, action) => {
-        state.loading = false;
+        state.relatedLoading = false;
         state.error = action.payload as string;
       });
   },
