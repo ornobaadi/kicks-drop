@@ -25,7 +25,7 @@ export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <header className="sticky top-4 z-50 px-4 sm:px-6">
+    <header className="sticky pt-5 z-50 px-4 sm:px-6 bg-[#eeece8]">
       {/* Floaty pill card — wraps BOTH the bar and the mobile dropdown */}
       <div className="max-w-7xl mx-auto bg-white/95 backdrop-blur-md rounded-2xl shadow-[0_4px_24px_rgba(0,0,0,0.12)] border border-gray-100 overflow-hidden">
 

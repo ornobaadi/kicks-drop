@@ -17,6 +17,10 @@ const nextConfig: NextConfig = {
       { protocol: 'https', hostname: 'loremflickr.com' },
       { protocol: 'https', hostname: 'picsum.photos' },
       { protocol: 'https', hostname: '*.picsum.photos' },
+      { protocol: 'https', hostname: 'placehold.co' },
+      { protocol: 'https', hostname: 'i.pravatar.cc' },
+      { protocol: 'https', hostname: 'api.escuelajs.co' },
+      { protocol: 'https', hostname: '*.escuelajs.co' },
     ],
   },
 };

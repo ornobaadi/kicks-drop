@@ -1,8 +1,17 @@
+import { HeroSection } from '@/components/home/HeroSection';
+import { NewDrops } from '@/components/home/NewDrops';
+import { Categories } from '@/components/home/Categories';
+import { Reviews } from '@/components/home/Reviews';
+import { Newsletter } from '@/components/common/Newsletter';
+
 export default function HomePage() {
   return (
     <main>
-      {/* Landing page sections will be composed here in Stage 3 */}
-      <p className="p-8 text-center text-gray-400">Stage 3 coming soon…</p>
+      <HeroSection />
+      <NewDrops />
+      <Categories />
+      <Reviews />
+      <Newsletter />
     </main>
   );
 }
