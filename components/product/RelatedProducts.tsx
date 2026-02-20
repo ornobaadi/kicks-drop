@@ -74,7 +74,7 @@ export function RelatedProducts({ categoryId, excludeId }: RelatedProductsProps)
         {loading && filtered.length === 0 ? (
           <ProductGridSkeleton count={4} />
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             {visible.map((p) => {
               const img = p.images?.[0] ? cleanImageUrl(p.images[0]) : null;
               const price = new Intl.NumberFormat('en-US', {

@@ -2,25 +2,28 @@ import Image from 'next/image';
 
 const REVIEWS = [
   {
-    title: 'Good Quality',
-    text: 'I highly recommend shopping from kicks',
+    title: 'Absolutely Worth It',
+    text: 'These kicks are next level. The quality is incredible and they arrived ahead of schedule. KICKS has earned a loyal customer.',
     rating: 5,
     avatar: 'https://i.pravatar.cc/40?img=5',
     name: 'Sarah M.',
+    date: 'Feb 10, 2026',
   },
   {
-    title: 'Good Quality',
-    text: 'I highly recommend shopping from kicks',
+    title: 'Best Sneakers I\'ve Owned',
+    text: 'Fit perfectly right out of the box — no break-in period needed. The colorways are fire and the materials feel premium.',
     rating: 5,
     avatar: 'https://i.pravatar.cc/40?img=12',
     name: 'James T.',
+    date: 'Jan 28, 2026',
   },
   {
-    title: 'Good Quality',
-    text: 'I highly recommend shopping from kicks',
+    title: 'Lightning Fast Delivery',
+    text: 'Ordered Sunday, arrived Tuesday. The packaging was immaculate and the shoe matched the photos perfectly. 10/10 will buy again.',
     rating: 5,
     avatar: 'https://i.pravatar.cc/40?img=22',
     name: 'Alex R.',
+    date: 'Jan 15, 2026',
   },
 ];
 
@@ -62,24 +65,27 @@ export function Reviews() {
         {/* Review cards */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
           {REVIEWS.map((r, i) => (
-            <div key={i} className="bg-white rounded-2xl p-5">
-              <div className="flex items-start justify-between gap-3">
-                <div className="flex-1 min-w-0">
-                  <p className="font-bold text-sm text-[#111]">{r.title}</p>
-                  <p
-                    className="text-xs text-gray-500 mt-1 leading-relaxed"
-                    style={{ fontFamily: 'var(--font-body)' }}
-                  >
-                    {r.text}
-                  </p>
-                </div>
-                <div className="relative w-9 h-9 rounded-full overflow-hidden flex-shrink-0 bg-gray-100">
+            <div key={i} className="bg-white rounded-2xl p-5 flex flex-col gap-3">
+              {/* Reviewer row */}
+              <div className="flex items-center gap-3">
+                <div className="relative w-10 h-10 rounded-full overflow-hidden shrink-0 bg-gray-100">
                   <Image src={r.avatar} alt={r.name} fill className="object-cover" />
                 </div>
-              </div>
-              <div className="flex items-center gap-2 mt-4">
+                <div className="flex-1 min-w-0">
+                  <p className="font-bold text-sm text-[#111] leading-tight">{r.name}</p>
+                  <p className="text-[11px] text-gray-400">{r.date}</p>
+                </div>
                 <StarRating count={r.rating} />
-                <span className="text-xs font-bold text-[#111]">{r.rating}.0</span>
+              </div>
+              {/* Review content */}
+              <div>
+                <p className="font-bold text-sm text-[#111] mb-1">{r.title}</p>
+                <p
+                  className="text-xs text-gray-500 leading-relaxed"
+                  style={{ fontFamily: 'var(--font-body)' }}
+                >
+                  {r.text}
+                </p>
               </div>
             </div>
           ))}
@@ -88,7 +94,7 @@ export function Reviews() {
         {/* Photo grid */}
         <div className="grid grid-cols-3 gap-4">
           {REVIEW_PHOTOS.map((src, i) => (
-            <div key={i} className="relative rounded-2xl overflow-hidden aspect-[4/3]">
+            <div key={i} className="relative rounded-2xl overflow-hidden aspect-4/3">
               <Image src={src} alt={`Customer photo ${i + 1}`} fill sizes="(max-width: 640px) 33vw, 33vw" className="object-cover" />
             </div>
           ))}

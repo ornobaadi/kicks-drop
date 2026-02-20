@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import {
   fetchProductById,
@@ -114,6 +115,33 @@ export function ProductDetailClient({ id }: ProductDetailClientProps) {
 
   return (
     <main>
+      {/* ── Breadcrumb ── */}
+      <nav
+        aria-label="Breadcrumb"
+        className="bg-[#fafaf9] border-b border-gray-100 px-4 sm:px-6 py-3"
+      >
+        <ol className="max-w-7xl mx-auto flex items-center gap-1.5 text-xs text-gray-400 flex-wrap">
+          <li>
+            <Link href="/" className="hover:text-[#111] transition-colors font-medium">
+              Home
+            </Link>
+          </li>
+          <li aria-hidden className="select-none">/</li>
+          <li>
+            <Link
+              href={`/?category=${product.category.id}`}
+              className="hover:text-[#111] transition-colors font-medium capitalize"
+            >
+              {product.category.name}
+            </Link>
+          </li>
+          <li aria-hidden className="select-none">/</li>
+          <li className="text-[#111] font-semibold truncate max-w-50 sm:max-w-xs">
+            {product.title}
+          </li>
+        </ol>
+      </nav>
+
       {/* ── Product layout ── */}
       <section className="bg-[#fafaf9] px-4 sm:px-6 py-10">
         <div className="max-w-7xl mx-auto">

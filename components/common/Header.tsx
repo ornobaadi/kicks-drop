@@ -77,9 +77,11 @@ export function Header() {
 
             <Link href="/cart" aria-label="Cart" className="relative p-2 rounded-lg hover:bg-gray-100 transition-colors">
               <HugeiconsIcon icon={ShoppingCart01Icon} size={20} color="#111" />
-              <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] flex items-center justify-center rounded-full bg-orange-500 text-white text-[10px] font-bold leading-none px-1">
-                {cartCount > 99 ? '99+' : cartCount}
-              </span>
+              {cartCount > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] flex items-center justify-center rounded-full bg-orange-500 text-white text-[10px] font-bold leading-none px-1">
+                  {cartCount > 99 ? '99+' : cartCount}
+                </span>
+              )}
             </Link>
           </div>
         </div>

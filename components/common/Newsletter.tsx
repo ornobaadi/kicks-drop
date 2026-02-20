@@ -63,7 +63,7 @@ export function Newsletter() {
           </div>
 
           {/* Right — KICKS logo watermark */}
-          <div className="flex-shrink-0 select-none relative">
+          <div className="shrink-0 select-none relative">
             <KicksLogo
               asLink={false}
               fontSize="clamp(3.5rem, 10vw, 6rem)"

@@ -114,7 +114,7 @@ export function Categories() {
                   </h3>
 
                   {/* Arrow button */}
-                  <div className="w-10 h-10 rounded-lg bg-black flex items-center justify-center flex-shrink-0 ml-3 group-hover:bg-[#4B5BFF] transition-colors duration-200">
+                  <div className="w-10 h-10 rounded-lg bg-black flex items-center justify-center shrink-0 ml-3 group-hover:bg-[#4B5BFF] transition-colors duration-200">
                     <svg
                       width="16"
                       height="16"

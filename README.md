@@ -1,36 +1,104 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# KICKS — Premium Sneakers & Athletic Footwear
+
+A modern sneaker e-commerce storefront built with Next.js 15, Redux Toolkit, and Tailwind CSS v4. Powered by the [Platzi Fake Store API](https://api.escuelajs.co/api/v1).
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Framework | Next.js 15 (App Router, Turbopack) |
+| State | Redux Toolkit + react-redux |
+| Data Fetching | Axios + async thunks |
+| Styling | Tailwind CSS v4 + shadcn/ui |
+| Fonts | Rubik (headings) · Open Sans (body) |
+| Language | TypeScript |
+| Package Manager | pnpm |
+
+---
 
 ## Getting Started
 
-First, run the development server:
+### 1. Install dependencies
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Set up environment variables
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Create a `.env.local` file in the project root:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```env
+NEXT_PUBLIC_API_BASE_URL=https://api.escuelajs.co/api/v1
+```
 
-## Learn More
+### 3. Run the development server
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+pnpm dev
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 4. Build for production
 
-## Deploy on Vercel
+```bash
+pnpm build
+pnpm start
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Project Structure
+
+```
+app/                   # Next.js App Router pages
+  layout.tsx           # Root layout (fonts, Redux Provider, Header, Footer)
+  page.tsx             # Landing page
+  not-found.tsx        # Custom 404 page
+  cart/page.tsx        # Shopping cart page
+  products/[id]/       # Dynamic product detail page
+
+components/
+  common/              # Shared: Header, Footer, ProductCard, Newsletter, Skeletons
+  home/                # Landing sections: HeroSection, NewDrops, Categories, Reviews
+  product/             # Product detail: Gallery, Info, ColorSelector, SizeSelector, Actions, Description, Related
+  cart/                # Cart: CartClient
+
+lib/api/               # Axios client + API functions (products, categories)
+store/                 # Redux store, slices (products, categories, cart), hooks, Provider
+types/                 # TypeScript interfaces (Product, Category, CartItem)
+```
+
+---
+
+## Features
+
+- **Landing Page** — Hero with FitText scaling, New Drops grid, Categories carousel, Reviews, Newsletter
+- **Product Detail** — Image gallery, color/size selectors, Add to Cart with feedback, related products
+- **Shopping Cart** — Quantity stepper, order summary, free shipping progress, localStorage persistence
+- **Responsive** — Mobile (320px+), tablet (768px+), desktop (1280px+)
+- **SEO** — Site-wide metadata + dynamic `generateMetadata` per product page
+- **Error States** — Retry buttons on all API-connected sections; custom 404 page
+- **Performance** — Server Components by default, `priority` on hero image, lazy load everywhere else
+
+---
+
+## Environment Variables
+
+| Variable | Description | Required |
+|---|---|---|
+| `NEXT_PUBLIC_API_BASE_URL` | Platzi Fake Store API base URL | Yes |
+
+---
+
+## Deployment
+
+Deploy to [Vercel](https://vercel.com):
+
+1. Push to GitHub
+2. Import the repository in Vercel
+3. Add `NEXT_PUBLIC_API_BASE_URL=https://api.escuelajs.co/api/v1` to Vercel Environment Variables
+4. Deploy

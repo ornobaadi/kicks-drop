@@ -86,7 +86,7 @@ export function HeroSection() {
             {/* Large hero card */}
             <div className="relative flex-1 rounded-2xl overflow-hidden bg-[#c8ad87]">
               {/* Vertical side badge */}
-              <div className="absolute left-0 top-0 bottom-0 w-[30px] z-10 flex items-center justify-center bg-black/30 backdrop-blur-[1px]">
+              <div className="absolute left-0 top-0 bottom-0 w-7.5 z-10 flex items-center justify-center bg-black/30 backdrop-blur-[1px]">
                 <span
                   className="text-white text-[8px] font-semibold uppercase tracking-[0.22em] whitespace-nowrap select-none"
                   style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}
@@ -113,7 +113,7 @@ export function HeroSection() {
               )}
 
               {/* Bottom overlay */}
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent p-6 pl-12">
+              <div className="absolute bottom-0 left-0 right-0 bg-linear-to-t from-black/80 via-black/30 to-transparent p-6 pl-12">
                 <h2 className="text-white font-black uppercase text-2xl sm:text-3xl lg:text-4xl leading-tight">
                   {hero?.title ?? 'NIKE AIR MAX'}
                 </h2>
@@ -135,11 +135,11 @@ export function HeroSection() {
             </div>
 
             {/* Right thumbnails */}
-            <div className="hidden sm:flex flex-col gap-3 w-[27%] max-w-[210px]">
+            <div className="hidden sm:flex flex-col gap-3 w-[27%] max-w-52.5">
               {thumb1 && thumb1.images?.[0] && (
                 <Link
                   href={`/products/${thumb1.id}`}
-                  className="group relative flex-1 rounded-2xl overflow-hidden bg-[#d4c4ae] min-h-[140px]"
+                  className="group relative flex-1 rounded-2xl overflow-hidden bg-[#d4c4ae] min-h-35"
                 >
                   <Image
                     src={cleanImageUrl(thumb1.images[0])}
@@ -156,7 +156,7 @@ export function HeroSection() {
               {thumb2 && thumb2.images?.[0] && (
                 <Link
                   href={`/products/${thumb2.id}`}
-                  className="group relative flex-1 rounded-2xl overflow-hidden bg-[#bfaf99] min-h-[140px]"
+                  className="group relative flex-1 rounded-2xl overflow-hidden bg-[#bfaf99] min-h-35"
                 >
                   <Image
                     src={cleanImageUrl(thumb2.images[0])}
