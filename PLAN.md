@@ -13,7 +13,7 @@
 | 2 | Shared Components | ✅ Complete |
 | 3 | Landing Page | ✅ Complete |
 | 4 | Product Detail Page | ✅ Complete |
-| 5 | Shopping Cart (Bonus) | ⬜ Not Started |
+| 5 | Shopping Cart (Bonus) | ✅ Complete |
 | 6 | Polish & Deploy | ⬜ Not Started |
 
 ---
@@ -275,5 +275,5 @@
 - [x] ✅ Stage 2 — Shared Components
 - [x] ✅ Stage 3 — Landing Page
 - [x] ✅ Stage 4 — Product Detail Page
-- [ ] ✅ Stage 5 — Shopping Cart
+- [x] ✅ Stage 5 — Shopping Cart
 - [ ] ✅ Stage 6 — Polish & Deploy
