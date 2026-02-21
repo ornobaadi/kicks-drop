@@ -92,7 +92,7 @@ interface CartItemRowProps {
   imageUrl: string | null;
   productId: number;
   color: string;
-  size: number;
+  size: string;
   price: number;
   quantity: number;
   onRemove: () => void;
@@ -147,17 +147,25 @@ function CartItemRow({
         </Link>
 
         {/* Color + Size badges */}
-        <div className="flex items-center gap-2 flex-wrap">
-          <span className="flex items-center gap-1.5 text-xs text-gray-500">
-            <span
-              className="w-3.5 h-3.5 rounded-full border border-gray-300 inline-block shrink-0"
-              style={{ backgroundColor: color }}
-            />
-            {color}
-          </span>
-          <span className="text-gray-300">·</span>
-          <span className="text-xs text-gray-500">EU {size}</span>
-        </div>
+        {(color || size) && (
+          <div className="flex items-center gap-2 flex-wrap">
+            {color && (
+              <span className="flex items-center gap-1.5 text-xs text-gray-500">
+                <span
+                  className="w-3.5 h-3.5 rounded-full border border-gray-300 inline-block shrink-0"
+                  style={{ backgroundColor: color }}
+                />
+                {color}
+              </span>
+            )}
+            {color && size && <span className="text-gray-300">·</span>}
+            {size && (
+              <span className="text-xs text-gray-500">
+                {/^\d+$/.test(size) ? `EU ${size}` : size}
+              </span>
+            )}
+          </div>
+        )}
 
         {/* Price per unit */}
         <p className="text-xs text-gray-400">{fmt(price)} each</p>

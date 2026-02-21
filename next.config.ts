@@ -19,8 +19,13 @@ const nextConfig: NextConfig = {
       { protocol: 'https', hostname: '*.picsum.photos' },
       { protocol: 'https', hostname: 'placehold.co' },
       { protocol: 'https', hostname: 'i.pravatar.cc' },
+      { protocol: 'https', hostname: 'pravatar.cc' },
+      { protocol: 'https', hostname: '*.pravatar.cc' },
+      { protocol: 'https', hostname: 'img.freepik.com' },
+      { protocol: 'https', hostname: '*.freepik.com' },
       { protocol: 'https', hostname: 'api.escuelajs.co' },
       { protocol: 'https', hostname: '*.escuelajs.co' },
+      { protocol: 'https', hostname: 'eduport.webestica.com' },
     ],
   },
 };

@@ -3,11 +3,11 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { KicksLogo } from '@/components/common/KicksLogo';
+import { GlobalSearch } from '@/components/common/GlobalSearch';
 import { useAppSelector } from '@/store/hooks';
 import { selectCartItemCount } from '@/store/slices/cartSlice';
 import { HugeiconsIcon } from '@hugeicons/react';
 import {
-  Search01Icon,
   User02Icon,
   ShoppingCart01Icon,
   Menu01Icon,
@@ -25,12 +25,13 @@ export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <header className="sticky pt-5 z-50 px-4 sm:px-6 bg-[#eeece8]">
+    <header className="sticky top-0 z-50 px-4 sm:px-6 pt-4 pb-2 pointer-events-none">
+      <div className="pointer-events-auto">
       {/* Floaty pill card — wraps BOTH the bar and the mobile dropdown */}
-      <div className="max-w-7xl mx-auto bg-white/95 backdrop-blur-md rounded-2xl shadow-[0_4px_24px_rgba(0,0,0,0.12)] border border-gray-100 overflow-hidden">
+      <div className="max-w-7xl mx-auto bg-white/95 backdrop-blur-md rounded-2xl shadow-[0_4px_24px_rgba(0,0,0,0.12)] border border-gray-100">
 
         {/* ── Main bar ── */}
-        <div className="px-5 sm:px-8 h-[60px] flex items-center justify-between gap-4 relative">
+        <div className="px-5 sm:px-8 h-15 flex items-center justify-between gap-4 relative">
 
           {/* Left: nav links (desktop) / hamburger (mobile) */}
           <nav className="hidden md:flex items-center gap-6">
@@ -66,10 +67,10 @@ export function Header() {
 
           {/* Right icons */}
           <div className="flex items-center gap-0.5 ml-auto">
-            {/* Search hidden on mobile to keep it clean */}
-            <button aria-label="Search" className="hidden md:flex p-2 rounded-lg hover:bg-gray-100 transition-colors">
-              <HugeiconsIcon icon={Search01Icon} size={20} color="#111" />
-            </button>
+            {/* Desktop live search */}
+            <div className="hidden md:block">
+              <GlobalSearch variant="desktop" />
+            </div>
 
             <Link href="/account" aria-label="Account" className="p-2 rounded-lg hover:bg-gray-100 transition-colors">
               <HugeiconsIcon icon={User02Icon} size={20} color="#111" />
@@ -78,7 +79,7 @@ export function Header() {
             <Link href="/cart" aria-label="Cart" className="relative p-2 rounded-lg hover:bg-gray-100 transition-colors">
               <HugeiconsIcon icon={ShoppingCart01Icon} size={20} color="#111" />
               {cartCount > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] flex items-center justify-center rounded-full bg-orange-500 text-white text-[10px] font-bold leading-none px-1">
+                <span className="absolute -top-0.5 -right-0.5 min-w-4.5 h-4.5 flex items-center justify-center rounded-full bg-orange-500 text-white text-[10px] font-bold leading-none px-1">
                   {cartCount > 99 ? '99+' : cartCount}
                 </span>
               )}
@@ -88,7 +89,7 @@ export function Header() {
 
         {/* ── Mobile dropdown — inside the pill card ── */}
         {mobileOpen && (
-          <div className="md:hidden border-t border-gray-100 px-5 py-5 flex flex-col gap-1">
+          <div className="md:hidden border-t border-gray-100 px-5 py-5 flex flex-col gap-1 rounded-b-2xl overflow-hidden">
             {NAV_LINKS.map((link) => (
               <Link
                 key={link.label}
@@ -101,14 +102,12 @@ export function Header() {
               </Link>
             ))}
             {/* Search row on mobile */}
-            <button className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-base font-semibold text-gray-800 hover:bg-gray-50 transition-colors w-full text-left mt-1">
-              <HugeiconsIcon icon={Search01Icon} size={18} color="#111" />
-              Search
-            </button>
+            <GlobalSearch variant="mobile" onNavigate={() => setMobileOpen(false)} />
           </div>
         )}
 
       </div>
+    </div>
     </header>
   );
 }

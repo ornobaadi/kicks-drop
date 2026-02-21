@@ -67,7 +67,7 @@ export function HeroSection() {
   }, [fitText]);
 
   return (
-    <section className="bg-[#eeece8] px-4 sm:px-6 pt-8 pb-12 overflow-hidden">
+    <section className="bg-[#eeece8] px-4 sm:px-6 pt-24 pb-12 overflow-hidden -mt-21">
       <div className="max-w-7xl mx-auto" ref={containerRef}>
         {/* Giant heading — auto-scales to fill container width */}
         <h1

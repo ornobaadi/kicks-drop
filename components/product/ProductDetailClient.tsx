@@ -15,6 +15,7 @@ import { ProductActions } from '@/components/product/ProductActions';
 import { ProductDescription } from '@/components/product/ProductDescription';
 import { RelatedProducts } from '@/components/product/RelatedProducts';
 import { Newsletter } from '@/components/common/Newsletter';
+import { getVariantConfig } from '@/lib/variants';
 
 function ProductDetailSkeleton() {
   return (
@@ -71,7 +72,7 @@ export function ProductDetailClient({ id }: ProductDetailClientProps) {
   const { selectedProduct: product, loading, error } = useAppSelector((s) => s.products);
 
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
-  const [selectedSize, setSelectedSize] = useState<number | null>(null);
+  const [selectedSize, setSelectedSize] = useState<string | null>(null);
   // Track previous id so we can reset selections during render when it changes
   const [prevId, setPrevId] = useState(id);
   if (prevId !== id) {
@@ -155,25 +156,44 @@ export function ProductDetailClient({ id }: ProductDetailClientProps) {
             <div className="space-y-6">
               <ProductInfo product={product} />
 
-              <div className="w-full h-px bg-gray-100" />
+              {/* Variant selectors — driven by title keywords + category slug */}
+              {(() => {
+                const { needsColor, needsSize, sizeType } = getVariantConfig(
+                  product.category.slug,
+                  product.title,
+                );
+                const hasVariants = needsColor || needsSize;
+                return (
+                  <>
+                    {hasVariants && <div className="w-full h-px bg-gray-100" />}
 
-              <ColorSelector
-                selected={selectedColor}
-                onChange={setSelectedColor}
-              />
+                    {needsColor && (
+                      <ColorSelector
+                        selected={selectedColor}
+                        onChange={setSelectedColor}
+                      />
+                    )}
 
-              <SizeSelector
-                selected={selectedSize}
-                onChange={setSelectedSize}
-              />
+                    {needsSize && sizeType && (
+                      <SizeSelector
+                        sizeType={sizeType}
+                        selected={selectedSize}
+                        onChange={setSelectedSize}
+                      />
+                    )}
 
-              <div className="w-full h-px bg-gray-100" />
+                    <div className="w-full h-px bg-gray-100" />
 
-              <ProductActions
-                product={product}
-                selectedColor={selectedColor}
-                selectedSize={selectedSize}
-              />
+                    <ProductActions
+                      product={product}
+                      selectedColor={selectedColor}
+                      selectedSize={selectedSize}
+                      needsColor={needsColor}
+                      needsSize={needsSize}
+                    />
+                  </>
+                );
+              })()}
 
               <ProductDescription description={product.description} />
             </div>

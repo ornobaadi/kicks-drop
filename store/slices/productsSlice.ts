@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { productsAPI } from '@/lib/api/products';
+import { productsAPI, type ProductFilterParams } from '@/lib/api/products';
 import type { Product, ProductsState } from '@/types/product';
 
 const initialState: ProductsState = {
@@ -45,6 +45,19 @@ export const fetchCatalogByCategory = createAsyncThunk(
   async (categoryId: number, { rejectWithValue }) => {
     try {
       const res = await productsAPI.getByCategory(categoryId, 50);
+      return res.data;
+    } catch (err: unknown) {
+      return rejectWithValue((err as Error).message);
+    }
+  }
+);
+
+/** Single thunk for the catalog page — passes all active filters to the API */
+export const fetchCatalogFiltered = createAsyncThunk(
+  'products/fetchCatalogFiltered',
+  async (params: ProductFilterParams, { rejectWithValue }) => {
+    try {
+      const res = await productsAPI.getFiltered(params);
       return res.data;
     } catch (err: unknown) {
       return rejectWithValue((err as Error).message);
@@ -133,6 +146,21 @@ const productsSlice = createSlice({
         state.catalogItems = action.payload as Product[];
       })
       .addCase(fetchCatalogByCategory.rejected, (state, action) => {
+        state.catalogLoading = false;
+        state.catalogError = action.payload as string;
+      });
+
+    // fetchCatalogFiltered (unified — used by the catalog page)
+    builder
+      .addCase(fetchCatalogFiltered.pending, (state) => {
+        state.catalogLoading = true;
+        state.catalogError = null;
+      })
+      .addCase(fetchCatalogFiltered.fulfilled, (state, action) => {
+        state.catalogLoading = false;
+        state.catalogItems = action.payload as Product[];
+      })
+      .addCase(fetchCatalogFiltered.rejected, (state, action) => {
         state.catalogLoading = false;
         state.catalogError = action.payload as string;
       });

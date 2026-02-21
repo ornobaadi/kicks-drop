@@ -13,7 +13,7 @@ const cartSlice = createSlice({
   reducers: {
     addItem(
       state,
-      action: PayloadAction<{ product: Product; color: string; size: number; quantity?: number }>
+      action: PayloadAction<{ product: Product; color: string; size: string; quantity?: number }>
     ) {
       const { product, color, size, quantity = 1 } = action.payload;
       const key = `${product.id}-${color}-${size}`;

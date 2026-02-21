@@ -1,24 +1,37 @@
+import type { SizeType } from '@/lib/variants';
+
 interface SizeSelectorProps {
-  selected: number | null;
-  onChange: (size: number) => void;
+  sizeType: SizeType;
+  selected: string | null;
+  onChange: (size: string) => void;
 }
 
-const ALL_SIZES = [36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47];
-// Simulate unavailable sizes (cosmetic — API has no stock data)
-const UNAVAILABLE = [43, 46];
+const SHOE_SIZES = ['36', '37', '38', '39', '40', '41', '42', '43', '44', '45', '46', '47'];
+const SHOE_UNAVAILABLE = ['43', '46'];
 
-export function SizeSelector({ selected, onChange }: SizeSelectorProps) {
+const CLOTHING_SIZES = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
+const CLOTHING_UNAVAILABLE: string[] = [];
+
+export function SizeSelector({ sizeType, selected, onChange }: SizeSelectorProps) {
+  const isShoes = sizeType === 'eu';
+  const sizes = isShoes ? SHOE_SIZES : CLOTHING_SIZES;
+  const unavailable = isShoes ? SHOE_UNAVAILABLE : CLOTHING_UNAVAILABLE;
+
   return (
     <div>
       <div className="flex items-center justify-between mb-3">
-        <span className="text-xs font-bold uppercase tracking-widest text-[#111]">Size</span>
-        <button className="text-xs text-[#4B5BFF] font-semibold underline underline-offset-2 hover:text-[#3a47e0] transition-colors">
-          Size Chart
-        </button>
+        <span className="text-xs font-bold uppercase tracking-widest text-[#111]">
+          {isShoes ? 'Size (EU)' : 'Size'}
+        </span>
+        {isShoes && (
+          <button className="text-xs text-[#4B5BFF] font-semibold underline underline-offset-2 hover:text-[#3a47e0] transition-colors">
+            Size Chart
+          </button>
+        )}
       </div>
-      <div className="grid grid-cols-6 gap-2">
-        {ALL_SIZES.map((size) => {
-          const isUnavailable = UNAVAILABLE.includes(size);
+      <div className={`grid gap-2 ${isShoes ? 'grid-cols-6' : 'grid-cols-6 sm:grid-cols-6'}`}>
+        {sizes.map((size) => {
+          const isUnavailable = unavailable.includes(size);
           const isSelected = selected === size;
           return (
             <button

@@ -8,31 +8,32 @@ import type { Product } from '@/types/product';
 interface ProductActionsProps {
   product: Product;
   selectedColor: string | null;
-  selectedSize: number | null;
+  selectedSize: string | null;
+  needsColor?: boolean;
+  needsSize?: boolean;
 }
 
-export function ProductActions({ product, selectedColor, selectedSize }: ProductActionsProps) {
+export function ProductActions({ product, selectedColor, selectedSize, needsColor = true, needsSize = true }: ProductActionsProps) {
   const dispatch = useAppDispatch();
   const [adding, setAdding] = useState(false);
   const [added, setAdded] = useState(false);
   const [wishlist, setWishlist] = useState(false);
 
-  const ready = !!selectedColor && !!selectedSize;
+  const ready = (!needsColor || !!selectedColor) && (!needsSize || !!selectedSize);
 
   async function handleAddToCart() {
     if (!ready) return;
     setAdding(true);
-    // Simulate a brief async operation (cart dispatch is synchronous but UX feedback helps)
     await new Promise((r) => setTimeout(r, 400));
-    dispatch(addItem({ product, color: selectedColor!, size: selectedSize! }));
+    dispatch(addItem({ product, color: selectedColor ?? '', size: selectedSize ?? '' }));
     setAdding(false);
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);
   }
 
-  const notReadyHint = !selectedColor
+  const notReadyHint = needsColor && !selectedColor
     ? 'Select a color'
-    : !selectedSize
+    : needsSize && !selectedSize
     ? 'Select a size'
     : '';
 
