@@ -2,17 +2,38 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { useState, useEffect, useRef } from 'react';
+import { Trash2 } from 'lucide-react';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import {
+  addItem,
   removeItem,
   updateQuantity,
   clearCart,
   selectCartItems,
   selectCartSubtotal,
 } from '@/store/slices/cartSlice';
+import { productsAPI } from '@/lib/api/products';
+import type { Product } from '@/types/product';
 
 const FREE_SHIPPING_THRESHOLD = 100;
-const SHIPPING_COST = 9.99;
+const SHIPPING_COST = 6.99;
+
+// Promo codes map: code → discount description + calculator
+const PROMO_CODES: Record<string, { label: string; apply: (sub: number, ship: number) => { discount: number; freeShip: boolean } }> = {
+  KICKS10: {
+    label: '10% off your order',
+    apply: (sub) => ({ discount: sub * 0.1, freeShip: false }),
+  },
+  WELCOME20: {
+    label: '20% off your order',
+    apply: (sub) => ({ discount: sub * 0.2, freeShip: false }),
+  },
+  FREESHIP: {
+    label: 'Free shipping',
+    apply: (_sub, ship) => ({ discount: ship, freeShip: true }),
+  },
+};
 
 function cleanImageUrl(raw: string): string {
   return raw.replace(/[\[\]"]/g, '').split(',')[0].trim();
@@ -178,9 +199,7 @@ function CartItemRow({
             aria-label="Remove item"
             className="w-7 h-7 rounded-full flex items-center justify-center text-gray-300 hover:text-red-500 hover:bg-red-50 transition-all"
           >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-              <path d="M18 6L6 18M6 6l12 12"/>
-            </svg>
+            <Trash2 size={14} strokeWidth={2} />
           </button>
         </div>
       </div>
@@ -195,16 +214,57 @@ interface OrderSummaryProps {
 }
 
 function OrderSummary({ subtotal, itemCount }: OrderSummaryProps) {
-  const shipping = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
-  const total = subtotal + shipping;
+  const baseShipping = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
   const toFreeShipping = FREE_SHIPPING_THRESHOLD - subtotal;
+
+  // Promo code state
+  const [promoOpen, setPromoOpen] = useState(false);
+  const [promoInput, setPromoInput] = useState('');
+  const [appliedCode, setAppliedCode] = useState<string | null>(null);
+  const [promoError, setPromoError] = useState('');
+
+  const promoData = appliedCode ? PROMO_CODES[appliedCode] : null;
+  const promoResult = promoData ? promoData.apply(subtotal, baseShipping) : null;
+  const discount = promoResult?.discount ?? 0;
+  const shipping = promoResult?.freeShip ? 0 : baseShipping;
+  const total = subtotal + shipping - (promoResult?.freeShip ? 0 : discount);
+
+  function applyPromo() {
+    const code = promoInput.trim().toUpperCase();
+    if (PROMO_CODES[code]) {
+      setAppliedCode(code);
+      setPromoError('');
+      setPromoInput('');
+      setPromoOpen(false);
+    } else {
+      setPromoError('Invalid promo code. Try KICKS10, WELCOME20 or FREESHIP.');
+    }
+  }
+
+  // Apply a promo code programmatically (used by suggestion chips)
+  function applyCode(code: string) {
+    const c = code.trim().toUpperCase();
+    if (PROMO_CODES[c]) {
+      setAppliedCode(c);
+      setPromoError('');
+      setPromoInput('');
+      setPromoOpen(false);
+    } else {
+      setPromoError('Invalid promo code.');
+    }
+  }
+
+  function removePromo() {
+    setAppliedCode(null);
+    setPromoError('');
+  }
 
   return (
     <div className="bg-white rounded-2xl border border-gray-100 p-6 space-y-4 lg:sticky lg:top-28">
-      <h2 className="font-black uppercase text-[#111] text-lg tracking-tight">Order Summary</h2>
+      <h2 className="font-bold uppercase text-[#111] text-lg tracking-tight">Order Summary</h2>
 
       {/* Free shipping progress */}
-      {shipping > 0 && (
+      {shipping > 0 && !promoResult?.freeShip && (
         <div className="bg-[#e7e7e3] rounded-xl p-3">
           <p className="text-xs text-gray-600 mb-2">
             Add <span className="font-bold text-[#4B5BFF]">{fmt(toFreeShipping)}</span> more for free shipping!
@@ -217,7 +277,7 @@ function OrderSummary({ subtotal, itemCount }: OrderSummaryProps) {
           </div>
         </div>
       )}
-      {shipping === 0 && (
+      {(shipping === 0 || promoResult?.freeShip) && (
         <div className="bg-green-50 rounded-xl p-3 flex items-center gap-2">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
             <polyline points="20 6 9 17 4 12"/>
@@ -238,8 +298,19 @@ function OrderSummary({ subtotal, itemCount }: OrderSummaryProps) {
             {shipping === 0 ? 'Free' : fmt(shipping)}
           </span>
         </div>
+        {discount > 0 && !promoResult?.freeShip && (
+          <div className="flex justify-between text-sm text-green-600">
+            <span className="flex items-center gap-1.5">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              Promo ({appliedCode})
+            </span>
+            <span className="font-semibold">−{fmt(discount)}</span>
+          </div>
+        )}
         <div className="h-px bg-gray-100" />
-        <div className="flex justify-between text-base font-black text-[#111]">
+        <div className="flex justify-between text-base font-semibold text-[#111]">
           <span>Total</span>
           <span className="text-[#4B5BFF]">{fmt(total)}</span>
         </div>
@@ -254,6 +325,79 @@ function OrderSummary({ subtotal, itemCount }: OrderSummaryProps) {
         Proceed to Checkout
       </button>
 
+      {/* Promo code section */}
+      <div>
+
+        {appliedCode ? (
+          <div className="flex items-center justify-between bg-green-50 border border-green-200 rounded-xl px-4 py-2.5">
+            <div className="flex items-center gap-2">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              <div>
+                <p className="text-xs font-bold text-green-700 uppercase tracking-wide">{appliedCode}</p>
+                <p className="text-[11px] text-green-600">{PROMO_CODES[appliedCode].label}</p>
+              </div>
+            </div>
+            <button
+              onClick={removePromo}
+              aria-label="Remove promo code"
+              className="w-6 h-6 rounded-full flex items-center justify-center text-green-400 hover:text-red-500 hover:bg-red-50 transition-all"
+            >
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                <path d="M18 6L6 18M6 6l12 12"/>
+              </svg>
+            </button>
+          </div>
+        ) : (
+          <div>
+            {!promoOpen ? (
+              <button
+                onClick={() => { setPromoOpen(true); setPromoError(''); }}
+                className="w-full text-sm text-gray-500 hover:text-[#4B5BFF] font-medium transition-colors text-center underline underline-offset-2"
+              >
+                Use a promo code
+              </button>
+            ) : (
+              <div className="space-y-2">
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={promoInput}
+                    onChange={(e) => { setPromoInput(e.target.value); setPromoError(''); }}
+                    onKeyDown={(e) => e.key === 'Enter' && applyPromo()}
+                    placeholder="Enter promo code"
+                    autoFocus
+                    className="flex-1 h-10 px-3 rounded-xl border border-gray-200 text-sm font-medium text-[#111] placeholder:text-gray-400 focus:outline-none focus:border-[#4B5BFF] focus:ring-2 focus:ring-[#4B5BFF]/20 transition"
+                  />
+                  <button
+                    onClick={applyPromo}
+                    className="h-10 px-4 rounded-xl bg-[#111] text-white text-xs font-bold uppercase tracking-wider hover:bg-[#333] transition-colors shrink-0"
+                  >
+                    Apply
+                  </button>
+                </div>
+                <div className="flex items-center gap-2">
+                  <p className="text-[11px] text-gray-500">Quick suggestions:</p>
+                  <button onClick={() => applyCode('KICKS10')} className="text-[11px] text-[#4B5BFF] font-medium">KICKS10</button>
+                  <button onClick={() => applyCode('WELCOME20')} className="text-[11px] text-[#4B5BFF] font-medium">WELCOME20</button>
+                  <button onClick={() => applyCode('FREESHIP')} className="text-[11px] text-[#4B5BFF] font-medium">FREESHIP</button>
+                </div>
+                {promoError && (
+                  <p className="text-[11px] text-red-500 font-medium px-1">{promoError}</p>
+                )}
+                <button
+                  onClick={() => { setPromoOpen(false); setPromoInput(''); setPromoError(''); }}
+                  className="text-[11px] text-gray-400 hover:text-gray-600 transition-colors w-full text-center"
+                >
+                  Cancel
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
       <p className="text-center text-xs text-gray-400">
         Checkout coming soon. Your cart is saved.
       </p>
@@ -267,6 +411,145 @@ function OrderSummary({ subtotal, itemCount }: OrderSummaryProps) {
           >
             {method}
           </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ── Recommendation card ────────────────────────────────────────────────────
+interface RecommendationCardProps {
+  product: Product;
+}
+
+function RecommendationCard({ product }: RecommendationCardProps) {
+  const dispatch = useAppDispatch();
+  const [added, setAdded] = useState(false);
+
+  const imageUrl = product.images?.[0]
+    ? product.images[0].replace(/[\[\]"]/g, '').split(',')[0].trim()
+    : null;
+
+  function handleQuickAdd() {
+    dispatch(addItem({ product, color: 'Default', size: 'One Size' }));
+    setAdded(true);
+    setTimeout(() => setAdded(false), 2000);
+  }
+
+  return (
+    <div className="shrink-0 w-44 sm:w-52 bg-white rounded-2xl border border-gray-100 overflow-hidden group">
+      <Link href={`/products/${product.id}`}>
+        <div className="relative w-full aspect-square bg-[#e7e7e3] overflow-hidden">
+          {imageUrl ? (
+            <Image
+              src={imageUrl}
+              alt={product.title}
+              fill
+              sizes="208px"
+              className="object-contain p-3 transition-transform duration-300 group-hover:scale-105"
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center text-gray-300">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1">
+                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                <path d="m9 9 6 6M15 9l-6 6"/>
+              </svg>
+            </div>
+          )}
+        </div>
+      </Link>
+      <div className="p-3 space-y-2">
+        <Link href={`/products/${product.id}`}>
+          <p className="text-xs font-bold uppercase tracking-wide text-[#111] line-clamp-2 leading-tight hover:underline underline-offset-2">
+            {product.title}
+          </p>
+        </Link>
+        <p className="text-xs font-semibold text-[#4B5BFF]">{fmt(product.price)}</p>
+        <button
+          onClick={handleQuickAdd}
+          className={`w-full h-8 rounded-lg text-[11px] font-bold uppercase tracking-wide transition-all duration-200
+            ${added
+              ? 'bg-green-500 text-white'
+              : 'bg-[#111] text-white hover:bg-[#333]'
+            }`}
+        >
+          {added ? '✓ Added!' : 'Quick Add'}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ── Recommendations strip ──────────────────────────────────────────────────
+function CartRecommendations() {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const cartItems = useAppSelector(selectCartItems);
+  const cartIds = new Set(cartItems.map((i) => i.product.id));
+
+  useEffect(() => {
+    productsAPI.getAll(20, 0).then(({ data }) => {
+      const filtered = data.filter((p) => !cartIds.has(p.id)).slice(0, 12);
+      setProducts(filtered);
+      setLoading(false);
+    }).catch(() => setLoading(false));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  function scroll(dir: 'left' | 'right') {
+    const el = scrollRef.current;
+    if (!el) return;
+    el.scrollBy({ left: dir === 'right' ? 220 : -220, behavior: 'smooth' });
+  }
+
+  if (loading) {
+    return (
+      <div className="mt-12">
+        <h2 className="font-black uppercase text-[#111] text-xl tracking-tight mb-5">You may also like</h2>
+        <div className="flex gap-4 overflow-hidden">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="shrink-0 w-44 sm:w-52 h-64 rounded-2xl bg-gray-100 animate-pulse" />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (products.length === 0) return null;
+
+  return (
+    <div className="mt-12">
+      <div className="flex items-center justify-between mb-5">
+        <h2 className="font-black uppercase text-[#111] text-xl tracking-tight">You may also like</h2>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => scroll('left')}
+            aria-label="Scroll left"
+            className="w-9 h-9 rounded-xl border border-gray-200 flex items-center justify-center text-gray-500 hover:bg-[#111] hover:text-white hover:border-[#111] transition-all"
+          >
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+              <path d="M10 4L6 8l4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
+          <button
+            onClick={() => scroll('right')}
+            aria-label="Scroll right"
+            className="w-9 h-9 rounded-xl border border-gray-200 flex items-center justify-center text-gray-500 hover:bg-[#111] hover:text-white hover:border-[#111] transition-all"
+          >
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+              <path d="M6 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div
+        ref={scrollRef}
+        className="flex gap-4 overflow-x-auto scrollbar-hide pb-2 -mx-1 px-1"
+        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+      >
+        {products.map((product) => (
+          <RecommendationCard key={product.id} product={product} />
         ))}
       </div>
     </div>
@@ -288,10 +571,13 @@ export function CartClient() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
       {/* Page heading */}
       <div className="flex items-center justify-between mb-8 gap-4">
-        <h1 className="font-black uppercase text-[#111] leading-none"
-          style={{ fontSize: 'clamp(1.6rem, 4vw, 2.5rem)' }}>
-          Your Cart
-        </h1>
+        <div className="flex flex-col">
+          <h1 className="font-black uppercase text-[#111] leading-none"
+            style={{ fontSize: 'clamp(1.6rem, 4vw, 2.5rem)' }}>
+            Your Cart
+          </h1>
+          <p className="text-sm text-gray-500 mt-2">Use <span className="font-bold text-[#4B5BFF]">KICKS10</span> for 10% off your first order.</p>
+        </div>
         <button
           onClick={() => dispatch(clearCart())}
           className="text-xs text-gray-400 hover:text-red-500 font-semibold uppercase tracking-wider transition-colors"
@@ -334,8 +620,11 @@ export function CartClient() {
         <OrderSummary subtotal={subtotal} itemCount={itemCount} />
       </div>
 
+      {/* Recommendations */}
+      <CartRecommendations />
+
       {/* Continue browsing */}
-      <div className="mt-8 text-center">
+      <div className="mt-10 text-center">
         <Link
           href="/"
           className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-[#111] font-medium transition-colors"

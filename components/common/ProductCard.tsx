@@ -61,7 +61,7 @@ export function ProductCard({ product, showNewBadge = false }: ProductCardProps)
       </h3>
 
       {/* CTA button */}
-      <div className="flex items-center justify-center gap-1.5 bg-[#111] text-white rounded-2xl px-4 py-4 text-sm font-bold uppercase tracking-widest group-hover:bg-[#222] transition-colors duration-200">
+      <div className="flex items-center justify-center gap-1 sm:gap-1.5 bg-[#111] text-white rounded-2xl px-2 py-3 sm:px-4 sm:py-4 text-xs sm:text-sm font-bold uppercase tracking-wide sm:tracking-widest group-hover:bg-[#222] transition-colors duration-200">
         <span>View Product</span>
         <span className="text-white/40">-</span>
         <span className="text-[#FF8C00]">{formattedPrice}</span>
