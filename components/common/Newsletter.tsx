@@ -18,8 +18,8 @@ export function Newsletter() {
   }
 
   return (
-    <section className="px-4 sm:px-6 py-6">
-      <div className="max-w-7xl mx-auto bg-blue-600 rounded-2xl overflow-hidden">
+    <section className="px-4 sm:px-6 pt-8 pb-4">
+      <div className="max-w-7xl mx-auto bg-[#4B5BFF] rounded-t-3xl overflow-hidden">
         <div className="flex flex-col md:flex-row items-center justify-between px-8 sm:px-12 py-10 gap-8">
           {/* Left content */}
           <div className="flex-1 min-w-0">
@@ -40,11 +40,11 @@ export function Newsletter() {
                   setStatus('idle');
                 }}
                 placeholder="Email address"
-                className="flex-1 min-w-0 bg-white/15 border border-white/30 text-white placeholder-blue-200 rounded-md px-4 py-2.5 text-sm outline-none focus:border-white focus:bg-white/25 transition-all"
+                className="flex-1 min-w-0 bg-transparent border border-white/50 text-white placeholder-white/60 rounded-lg px-4 py-2.5 text-sm outline-none focus:border-white transition-all"
               />
               <button
                 type="submit"
-                className="bg-white text-blue-700 font-bold text-xs uppercase tracking-widest px-5 py-2.5 rounded-md hover:bg-blue-50 transition-colors whitespace-nowrap"
+                className="bg-[#111] text-white font-bold text-xs uppercase tracking-widest px-5 py-2.5 rounded-lg hover:bg-gray-800 transition-colors whitespace-nowrap"
               >
                 Submit
               </button>
@@ -62,15 +62,16 @@ export function Newsletter() {
             )}
           </div>
 
-          {/* Right — KICKS logo watermark */}
+          {/* Right — KICKS logo */}
           <div className="shrink-0 select-none relative">
             <KicksLogo
               asLink={false}
-              fontSize="clamp(3.5rem, 10vw, 6rem)"
+              fontSize="clamp(4rem, 11vw, 7rem)"
               color="text-white"
-              opacity={0.25}
             />
-            <span className="absolute top-0 right-0 w-4 h-4 rounded-full bg-orange-400 translate-x-1/2 -translate-y-1/2" />
+            <span className="absolute top-0 right-0 w-6 h-6 rounded-full bg-orange-400 translate-x-1/3 -translate-y-1/3 flex items-center justify-center text-white font-black text-sm leading-none">
+              +
+            </span>
           </div>
         </div>
       </div>

@@ -20,13 +20,7 @@ export default function NotFound() {
             <span className="text-[#4B5BFF]">0</span>
             4
           </span>
-          {/* Floating question mark */}
-          <span
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-6xl sm:text-8xl pointer-events-none opacity-20"
-            aria-hidden
-          >
-            ?
-          </span>
+
         </div>
 
         {/* Copy */}
