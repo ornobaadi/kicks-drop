@@ -166,7 +166,6 @@ export function ProductsClient() {
       ...(urlPriceMin != null ? { price_min: urlPriceMin } : {}),
       ...(urlPriceMax != null ? { price_max: urlPriceMax } : {}),
     }));
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, urlTitle, urlCategory, urlPriceMin, urlPriceMax]);
 
   // ── debounce title search → URL ───────────────────────────────────────────
@@ -421,8 +420,18 @@ export function ProductsClient() {
 
         {/* ── products grid ── */}
         {error && catalogItems.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-24 gap-4 text-center">
-            <p className="text-gray-500 text-sm">Failed to load products. Please try again.</p>
+          <div className="flex flex-col items-center justify-center py-24 gap-5 text-center">
+            <div className="w-16 h-16 rounded-full bg-red-50 flex items-center justify-center">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="8" x2="12" y2="12"/>
+                <line x1="12" y1="16" x2="12.01" y2="16"/>
+              </svg>
+            </div>
+            <div>
+              <h3 className="font-bold text-[#111] text-base mb-1">Failed to load products</h3>
+              <p className="text-gray-400 text-sm">Check your connection and try again.</p>
+            </div>
             <button
               onClick={() => dispatch(fetchCatalogFiltered({
                 ...(urlTitle    ? { title: urlTitle }         : {}),
@@ -430,7 +439,7 @@ export function ProductsClient() {
                 ...(urlPriceMin != null ? { price_min: urlPriceMin } : {}),
                 ...(urlPriceMax != null ? { price_max: urlPriceMax } : {}),
               }))}
-              className="bg-[#4B5BFF] text-white text-xs font-bold uppercase tracking-widest px-6 py-3 rounded-lg hover:bg-[#3a47e0] transition-colors"
+              className="bg-[#4B5BFF] text-white text-xs font-bold uppercase tracking-widest px-6 py-3 rounded-xl hover:bg-[#3a47e0] transition-colors"
             >
               Retry
             </button>
@@ -438,12 +447,26 @@ export function ProductsClient() {
         ) : loading ? (
           <ProductGridSkeleton count={PAGE_SIZE} />
         ) : paged.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-24 gap-3 text-center">
-            <p className="text-gray-400 text-sm">No products found.</p>
+          <div className="flex flex-col items-center justify-center py-24 gap-4 text-center">
+            <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="11" cy="11" r="8"/>
+                <path d="m21 21-4.35-4.35"/>
+                <path d="M8 11h6M11 8v6" opacity="0.4"/>
+              </svg>
+            </div>
+            <div>
+              <p className="font-bold text-[#111] text-base mb-1">No products found</p>
+              <p className="text-gray-400 text-sm max-w-xs">
+                {anyFilter
+                  ? 'Try adjusting your filters to find what you\u2019re looking for.'
+                  : 'Check back soon — new items are added regularly.'}
+              </p>
+            </div>
             {anyFilter && (
               <button
                 onClick={clearAll}
-                className="text-[#4B5BFF] text-xs font-bold underline underline-offset-2"
+                className="bg-[#4B5BFF] text-white text-xs font-bold uppercase tracking-widest px-6 py-2.5 rounded-lg hover:bg-[#3a47e0] transition-colors"
               >
                 Clear all filters
               </button>

@@ -24,9 +24,12 @@ export function SizeSelector({ sizeType, selected, onChange }: SizeSelectorProps
           {isShoes ? 'Size (EU)' : 'Size'}
         </span>
         {isShoes && (
-          <button className="text-xs text-[#4B5BFF] font-semibold underline underline-offset-2 hover:text-[#3a47e0] transition-colors">
+          <span
+            title="Size chart coming soon"
+            className="text-xs text-[#4B5BFF]/60 font-semibold cursor-not-allowed select-none"
+          >
             Size Chart
-          </button>
+          </span>
         )}
       </div>
       <div className={`grid gap-2 ${isShoes ? 'grid-cols-6' : 'grid-cols-6 sm:grid-cols-6'}`}>

@@ -53,7 +53,6 @@ export async function Footer() {
     categories = res?.data ?? [];
   } catch (err) {
     // fallback to empty; server console log for debugging
-    // eslint-disable-next-line no-console
     console.error('Failed to load categories for footer', err);
     categories = [];
   }

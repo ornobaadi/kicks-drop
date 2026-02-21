@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 
 const REVIEWS = [
   {
@@ -57,9 +58,12 @@ export function Reviews() {
           >
             Reviews
           </h2>
-          <button className="bg-[#4B5BFF] text-white text-[10px] font-bold uppercase tracking-widest px-4 py-2.5 rounded-lg hover:bg-[#3a47e0] transition-colors duration-200">
+          <Link
+            href="/products"
+            className="bg-[#4B5BFF] text-white text-[10px] font-bold uppercase tracking-widest px-4 py-2.5 rounded-lg hover:bg-[#3a47e0] transition-colors duration-200"
+          >
             See All
-          </button>
+          </Link>
         </div>
 
         {/* Review cards */}

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useEffect, useRef, useCallback } from 'react';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { fetchProducts } from '@/store/slices/productsSlice';
+import type { Product } from '@/types/product';
 
 function cleanImageUrl(raw: string): string {
   return raw.replace(/[\[\]"]/g, '').split(',')[0].trim();
@@ -12,18 +13,34 @@ function cleanImageUrl(raw: string): string {
 
 function HeroSkeleton() {
   return (
-    <div className="animate-pulse rounded-2xl bg-gray-200" style={{ minHeight: '440px' }} />
+    <div className="animate-pulse rounded-2xl overflow-hidden bg-gray-200 min-h-120">
+      {/* Simulates the bottom text overlay */}
+      <div className="h-full flex flex-col justify-end p-6 pl-12 min-h-120">
+        <div className="space-y-3">
+          <div className="h-7 w-1/2 bg-gray-300/60 rounded" />
+          <div className="h-4 w-1/3 bg-gray-300/60 rounded" />
+          <div className="h-4 w-2/5 bg-gray-300/60 rounded" />
+          <div className="h-10 w-28 bg-gray-300/60 rounded-lg mt-2" />
+        </div>
+      </div>
+    </div>
   );
 }
 
-export function HeroSection() {
+interface HeroSectionProps {
+  initialProducts?: Product[];
+}
+
+export function HeroSection({ initialProducts = [] }: HeroSectionProps) {
   const dispatch = useAppDispatch();
-  const { items: rawItems, loading } = useAppSelector((s) => s.products);
-  const items = Array.isArray(rawItems) ? rawItems : [];
+  const { items: rawItems } = useAppSelector((s) => s.products);
+  // Use live Redux data when available; fall back to server-prefetched data
+  // so the initial SSR render and client hydration always agree.
+  const items = Array.isArray(rawItems) && rawItems.length > 0 ? rawItems : initialProducts;
 
   useEffect(() => {
-    if (items.length === 0) dispatch(fetchProducts(20));
-  }, [dispatch, items.length]);
+    if (rawItems.length === 0) dispatch(fetchProducts(20));
+  }, [dispatch, rawItems.length]);
 
   // Pick the first product with multiple images so we can show alternate angles
   const hero =
@@ -78,10 +95,10 @@ export function HeroSection() {
         </h1>
 
         {/* Main hero layout */}
-        {loading && items.length === 0 ? (
+        {items.length === 0 ? (
           <HeroSkeleton />
         ) : (
-          <div className="relative rounded-2xl overflow-hidden bg-[#c8ad87]" style={{ minHeight: '540px' }}>
+          <div className="relative rounded-2xl overflow-hidden bg-[#c8ad87] min-h-135">
             {/* Vertical side badge */}
             <div className="absolute left-0 top-0 bottom-0 w-7.5 z-10 flex items-center justify-center bg-black/30 backdrop-blur-[1px]">
               <span
@@ -144,7 +161,7 @@ export function HeroSection() {
                       alt={`${hero?.title ?? 'Product'} view ${i + 2}`}
                       fill
                       sizes="144px"
-                      className="object-cover group-hover:scale-110 transition-transform duration-400"
+                      className="object-cover group-hover:scale-110 transition-transform duration-300"
                       onError={(e) => {
                         (e.currentTarget as HTMLImageElement).style.display = 'none';
                       }}

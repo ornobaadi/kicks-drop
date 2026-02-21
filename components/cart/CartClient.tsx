@@ -87,7 +87,6 @@ function Stepper({ value, onDecrement, onIncrement }: StepperProps) {
 
 // ── Cart item row ──────────────────────────────────────────────────────────
 interface CartItemRowProps {
-  itemKey: string;
   title: string;
   imageUrl: string | null;
   productId: number;
@@ -312,7 +311,6 @@ export function CartClient() {
             return (
               <CartItemRow
                 key={item.key}
-                itemKey={item.key}
                 title={item.product.title}
                 imageUrl={imageUrl}
                 productId={item.product.id}

@@ -6,19 +6,25 @@ import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { fetchProducts } from '@/store/slices/productsSlice';
 import { ProductCard } from '@/components/common/ProductCard';
 import { ProductGridSkeleton } from '@/components/common/Skeletons';
+import type { Product } from '@/types/product';
 
-export function NewDrops() {
+interface NewDropsProps {
+  initialProducts?: Product[];
+}
+
+export function NewDrops({ initialProducts = [] }: NewDropsProps) {
   const dispatch = useAppDispatch();
-  const { items: rawItems, loading, error } = useAppSelector((s) => s.products);
-  const items = Array.isArray(rawItems) ? rawItems : [];
+  const { items: rawItems, error } = useAppSelector((s) => s.products);
+  // Use live Redux data when available; fall back to server-prefetched data
+  const items = Array.isArray(rawItems) && rawItems.length > 0 ? rawItems : initialProducts;
 
   useEffect(() => {
-    if (items.length === 0) dispatch(fetchProducts(20));
-  }, [dispatch, items.length]);
+    if (rawItems.length === 0) dispatch(fetchProducts(20));
+  }, [dispatch, rawItems.length]);
 
   const allProducts = items.filter((p) => p.images?.length > 0 && p.images[0]);
   // Prefer 4 items but replace the 4th if it has a very short title
-  let products = allProducts.slice(0, 4);
+  const products = allProducts.slice(0, 4);
   if (products.length === 4) {
     const fourth = products[3];
     if ((fourth.title || '').length < 20) {
@@ -51,8 +57,15 @@ export function NewDrops() {
         </div>
 
         {/* Product grid */}
-        {error && products.length === 0 ? (
+        {error && items.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 gap-4 text-center">
+            <div className="w-14 h-14 rounded-full bg-red-50 flex items-center justify-center">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="8" x2="12" y2="12"/>
+                <line x1="12" y1="16" x2="12.01" y2="16"/>
+              </svg>
+            </div>
             <p className="text-gray-500 text-sm">Failed to load products. Please try again.</p>
             <button
               onClick={() => dispatch(fetchProducts(20))}
@@ -61,12 +74,12 @@ export function NewDrops() {
               Retry
             </button>
           </div>
-        ) : loading && products.length === 0 ? (
-          <ProductGridSkeleton count={8} />
+        ) : items.length === 0 ? (
+          <ProductGridSkeleton count={4} />
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {products.map((p) => (
-              <ProductCard key={p.id} product={p} />
+              <ProductCard key={p.id} product={p} showNewBadge />
             ))}
           </div>
         )}

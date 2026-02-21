@@ -15,53 +15,8 @@ import { ProductActions } from '@/components/product/ProductActions';
 import { ProductDescription } from '@/components/product/ProductDescription';
 import { RelatedProducts } from '@/components/product/RelatedProducts';
 import { Newsletter } from '@/components/common/Newsletter';
+import { ProductDetailPageSkeleton } from '@/components/common/Skeletons';
 import { getVariantConfig } from '@/lib/variants';
-
-function ProductDetailSkeleton() {
-  return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10 animate-pulse">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-        {/* Gallery skeleton */}
-        <div className="space-y-3">
-          <div className="aspect-square rounded-2xl bg-gray-200 w-full" />
-          <div className="grid grid-cols-4 gap-2">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="aspect-square rounded-xl bg-gray-200" />
-            ))}
-          </div>
-        </div>
-        {/* Info skeleton */}
-        <div className="space-y-4 pt-2">
-          <div className="h-5 w-24 rounded bg-gray-200" />
-          <div className="h-8 w-3/4 rounded bg-gray-200" />
-          <div className="h-8 w-3/4 rounded bg-gray-200" />
-          <div className="h-10 w-32 rounded bg-gray-200" />
-          <div className="h-4 w-20 rounded bg-gray-200" />
-          <div className="space-y-2 pt-4">
-            <div className="h-3 w-16 rounded bg-gray-200" />
-            <div className="flex gap-2">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <div key={i} className="w-9 h-9 rounded-full bg-gray-200" />
-              ))}
-            </div>
-          </div>
-          <div className="space-y-2 pt-2">
-            <div className="h-3 w-16 rounded bg-gray-200" />
-            <div className="grid grid-cols-6 gap-2">
-              {Array.from({ length: 12 }).map((_, i) => (
-                <div key={i} className="h-10 rounded-lg bg-gray-200" />
-              ))}
-            </div>
-          </div>
-          <div className="space-y-3 pt-4">
-            <div className="h-12 w-full rounded-xl bg-gray-200" />
-            <div className="h-12 w-full rounded-xl bg-gray-200" />
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 interface ProductDetailClientProps {
   id: number;
@@ -89,26 +44,40 @@ export function ProductDetailClient({ id }: ProductDetailClientProps) {
   }, [id, dispatch]);
 
   if (loading || (!product && !error)) {
-    return (
-      <main>
-        <ProductDetailSkeleton />
-      </main>
-    );
+    return <ProductDetailPageSkeleton />;
   }
 
   if (error || !product) {
     return (
       <main>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-24 flex flex-col items-center gap-4 text-center">
-          <p className="text-gray-500 text-base">
-            {error ?? 'Product not found.'}
-          </p>
-          <button
-            onClick={() => dispatch(fetchProductById(id))}
-            className="bg-[#4B5BFF] text-white text-xs font-bold uppercase tracking-widest px-6 py-3 rounded-lg hover:bg-[#3a47e0] transition-colors"
-          >
-            Retry
-          </button>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-24 flex flex-col items-center gap-5 text-center">
+          <div className="w-16 h-16 rounded-full bg-red-50 flex items-center justify-center">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="8" x2="12" y2="12"/>
+              <line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+          </div>
+          <div>
+            <h2 className="font-black uppercase text-[#111] text-xl mb-2">Product not found</h2>
+            <p className="text-gray-500 text-sm max-w-xs">
+              {error ?? 'This product may have been removed or the link is invalid.'}
+            </p>
+          </div>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <button
+              onClick={() => dispatch(fetchProductById(id))}
+              className="bg-[#4B5BFF] text-white text-xs font-bold uppercase tracking-widest px-6 py-3 rounded-xl hover:bg-[#3a47e0] transition-colors"
+            >
+              Try Again
+            </button>
+            <Link
+              href="/products"
+              className="bg-[#111] text-white text-xs font-bold uppercase tracking-widest px-6 py-3 rounded-xl hover:bg-gray-800 transition-colors"
+            >
+              Browse Products
+            </Link>
+          </div>
         </div>
       </main>
     );

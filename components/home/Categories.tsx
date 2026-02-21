@@ -6,16 +6,22 @@ import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { fetchCategories } from '@/store/slices/categoriesSlice';
 import { CategoryCardSkeleton } from '@/components/common/Skeletons';
+import type { Category } from '@/types/category';
 
-export function Categories() {
+interface CategoriesProps {
+  initialCategories?: Category[];
+}
+
+export function Categories({ initialCategories = [] }: CategoriesProps) {
   const dispatch = useAppDispatch();
-  const { items: rawItems, loading, error } = useAppSelector((s) => s.categories);
-  const items = Array.isArray(rawItems) ? rawItems : [];
+  const { items: rawItems, error } = useAppSelector((s) => s.categories);
+  // Use live Redux data when available; fall back to server-prefetched data
+  const items = Array.isArray(rawItems) && rawItems.length > 0 ? rawItems : initialCategories;
   const [page, setPage] = useState(0);
 
   useEffect(() => {
-    if (items.length === 0) dispatch(fetchCategories());
-  }, [dispatch, items.length]);
+    if (rawItems.length === 0) dispatch(fetchCategories());
+  }, [dispatch, rawItems.length]);
 
   const perPage = 2;
   const totalPages = Math.max(1, Math.ceil(items.length / perPage));
@@ -59,6 +65,13 @@ export function Categories() {
         {/* Cards */}
         {error && items.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 gap-4 text-center">
+            <div className="w-14 h-14 rounded-full bg-white/10 flex items-center justify-center">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="8" x2="12" y2="12"/>
+                <line x1="12" y1="16" x2="12.01" y2="16"/>
+              </svg>
+            </div>
             <p className="text-white/60 text-sm">Failed to load categories. Please try again.</p>
             <button
               onClick={() => dispatch(fetchCategories())}
@@ -67,7 +80,7 @@ export function Categories() {
               Retry
             </button>
           </div>
-        ) : loading && items.length === 0 ? (
+        ) : items.length === 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <CategoryCardSkeleton />
             <CategoryCardSkeleton />
@@ -78,8 +91,7 @@ export function Categories() {
               <Link
                 key={cat.id}
                 href={`/products?category=${cat.id}`}
-                className="group relative bg-white rounded-2xl overflow-hidden cursor-pointer block"
-                style={{ minHeight: '360px' }}
+                className="group relative bg-white rounded-2xl overflow-hidden cursor-pointer block min-h-90"
               >
                 {/* Image */}
                 <div className="absolute inset-0 flex items-center justify-center">
