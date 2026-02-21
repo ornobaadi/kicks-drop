@@ -14,7 +14,16 @@ apiClient.interceptors.response.use(
     if (error.response) {
       console.error(`API Error ${error.response.status}:`, error.response.data);
     } else if (error.request) {
-      console.error('Network Error — no response received:', error.request);
+      // `error.request` can be a complex object that prints as `{}` in some consoles.
+      // Log a concise, useful summary instead (method, url, payload, and original message).
+      const cfg = error.config || {};
+      console.error('Network Error — no response received', {
+        message: error.message,
+        method: cfg.method,
+        url: cfg.url,
+        data: cfg.data,
+        headers: cfg.headers,
+      });
     } else {
       console.error('Request setup error:', error.message);
     }

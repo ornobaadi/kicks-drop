@@ -2,6 +2,9 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
+    // Disable the built-in image optimizer to avoid server-side fetch errors
+    // (e.g. ENOTFOUND for blocked/unresolvable hosts like placeimg.com).
+    unoptimized: true,
     remotePatterns: [
       { protocol: 'https', hostname: 'i.imgur.com' },
       { protocol: 'https', hostname: '*.imgur.com' },
