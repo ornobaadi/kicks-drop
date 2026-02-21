@@ -8,7 +8,7 @@ A modern multi-category e-commerce storefront built with Next.js 15, Redux Toolk
 
 | Layer | Technology |
 |---|---|
-| Framework | Next.js 15 (App Router, Turbopack) |
+| Framework | Next.js 16 (App Router, Turbopack) |
 | State | Redux Toolkit + react-redux |
 | Data Fetching | Axios + async thunks |
 | Styling | Tailwind CSS v4 + shadcn/ui |

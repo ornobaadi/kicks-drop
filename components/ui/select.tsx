@@ -126,7 +126,7 @@ function SelectItem({
         {children}
       </SelectPrimitive.ItemText>
       <SelectPrimitive.ItemIndicator
-        render={<span className="pointer-events-none absolute end-2 flex size-4 items-center justify-center" />}
+        render={<span className="pointer-events-none absolute inset-e-2 flex size-4 items-center justify-center" />}
       >
         <Check strokeWidth={2} className="pointer-events-none" />
       </SelectPrimitive.ItemIndicator>

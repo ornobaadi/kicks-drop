@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useState, useEffect, useRef } from 'react';
 import { Trash2 } from 'lucide-react';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
@@ -211,9 +212,192 @@ function CartItemRow({
 interface OrderSummaryProps {
   subtotal: number;
   itemCount: number;
+  onConfirmOrder: () => void;
 }
 
-function OrderSummary({ subtotal, itemCount }: OrderSummaryProps) {
+// ── Checkout "Coming Soon" modal ───────────────────────────────────────────
+interface CheckoutModalProps {
+  total: number;
+  itemCount: number;
+  shipping: number;
+  discount: number;
+  appliedCode: string | null;
+  onClose: () => void;
+  onConfirm: () => void;
+}
+
+function CheckoutModal({ total, itemCount, shipping, discount, appliedCode, onClose, onConfirm }: CheckoutModalProps) {
+  const [visible, setVisible] = useState(false);
+  const [confirming, setConfirming] = useState(false);
+
+  async function handleConfirm() {
+    setConfirming(true);
+    await new Promise((r) => setTimeout(r, 900));
+    onConfirm();
+  }
+
+  // Trigger entrance animation after mount
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setVisible(true));
+    return () => cancelAnimationFrame(id);
+  }, []);
+
+  // Close on Escape
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) { if (e.key === 'Escape') handleClose(); }
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Lock body scroll
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => { document.body.style.overflow = ''; };
+  }, []);
+
+  function handleClose() {
+    setVisible(false);
+    setTimeout(onClose, 280);
+  }
+
+  const TRUST_BADGES = [
+    { icon: '🔒', label: 'SSL Secured' },
+    { icon: '↩️', label: 'Free Returns' },
+    { icon: '🚚', label: 'Fast Delivery' },
+  ];
+
+  return (
+    <div
+      className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center"
+      onClick={(e) => { if (e.target === e.currentTarget) handleClose(); }}
+    >
+      {/* Backdrop */}
+      <div
+        className="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300"
+        style={{ opacity: visible ? 1 : 0 }}
+      />
+
+      {/* Sheet */}
+      <div
+        className="relative w-full sm:max-w-md bg-white sm:rounded-3xl rounded-t-3xl shadow-2xl overflow-y-auto max-h-[92dvh] sm:max-h-[88dvh] transition-all duration-[280ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
+        style={{
+          transform: visible ? 'translateY(0) scale(1)' : 'translateY(60px) scale(0.97)',
+          opacity: visible ? 1 : 0,
+        }}
+      >
+        {/* Header */}
+        <div className="bg-[#111] px-6 pt-6 pb-5 relative">
+          <button
+            onClick={handleClose}
+            aria-label="Close"
+            className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 transition-colors flex items-center justify-center text-white/70 hover:text-white"
+          >
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <path d="M1 1l10 10M11 1L1 11" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+            </svg>
+          </button>
+
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-[#4B5BFF] flex items-center justify-center shrink-0">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+            </div>
+            <div>
+              <h2 className="text-white font-black uppercase tracking-tight text-lg leading-none">Secure Checkout</h2>
+              <p className="text-white/50 text-xs mt-0.5">256-bit SSL encryption</p>
+            </div>
+          </div>
+
+          {/* Order recap pill */}
+          <div className="mt-4 bg-white/10 rounded-xl px-4 py-3 flex items-center justify-between">
+            <span className="text-white/70 text-sm">{itemCount} {itemCount === 1 ? 'item' : 'items'}</span>
+            <div className="text-right">
+              {discount > 0 && (
+                <p className="text-green-400 text-[11px] font-semibold">
+                  −{fmt(discount)} {appliedCode && `(${appliedCode})`}
+                </p>
+              )}
+              <p className="text-white font-black text-xl leading-none">{fmt(total)}</p>
+              {shipping === 0 && (
+                <p className="text-green-400 text-[11px] font-medium">Free shipping included</p>
+              )}
+            </div>
+          </div>
+        </div>
+
+        <div className="px-6 py-5 space-y-5">
+          {/* Trust badges */}
+          <div className="flex items-center justify-around py-1">
+            {TRUST_BADGES.map((b) => (
+              <div key={b.label} className="flex flex-col items-center gap-1">
+                <span className="text-lg leading-none">{b.icon}</span>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">{b.label}</span>
+              </div>
+            ))}
+          </div>
+
+          {/* Confirm Order CTA */}
+          <button
+            onClick={handleConfirm}
+            disabled={confirming}
+            className={`w-full rounded-xl text-sm font-bold uppercase tracking-widest py-4 transition-all duration-200 flex items-center justify-center gap-2.5
+              ${confirming
+                ? 'bg-[#3a47e0] text-white cursor-wait'
+                : 'bg-[#4B5BFF] text-white hover:bg-[#3a47e0] active:scale-[0.98]'
+              }`}
+          >
+            {confirming ? (
+              <>
+                <svg className="animate-spin w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"/>
+                </svg>
+                Processing your order…
+              </>
+            ) : (
+              <>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                Confirm Order · {fmt(total)}
+              </>
+            )}
+          </button>
+
+          {/* Payment method logos */}
+          <div className="space-y-2">
+            <p className="text-[11px] text-center text-gray-400 font-medium uppercase tracking-widest">
+              Accepted payments
+            </p>
+            <div className="flex items-center justify-center gap-2 flex-wrap">
+              {[
+                { label: 'Visa',    bg: '#1a1f71', color: 'white' },
+                { label: 'MC',      bg: '#eb001b', color: 'white' },
+                { label: 'Amex',    bg: '#016fcf', color: 'white' },
+                { label: 'PayPal',  bg: '#003087', color: 'white' },
+                { label: 'Apple Pay', bg: '#000',  color: 'white' },
+                { label: 'GPay',    bg: '#4285f4', color: 'white' },
+              ].map((m) => (
+                <span
+                  key={m.label}
+                  className="text-[10px] font-bold px-2.5 py-1 rounded-md"
+                  style={{ background: m.bg, color: m.color }}
+                >
+                  {m.label}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function OrderSummary({ subtotal, itemCount, onConfirmOrder }: OrderSummaryProps) {
   const baseShipping = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
   const toFreeShipping = FREE_SHIPPING_THRESHOLD - subtotal;
 
@@ -222,6 +406,7 @@ function OrderSummary({ subtotal, itemCount }: OrderSummaryProps) {
   const [promoInput, setPromoInput] = useState('');
   const [appliedCode, setAppliedCode] = useState<string | null>(null);
   const [promoError, setPromoError] = useState('');
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
 
   const promoData = appliedCode ? PROMO_CODES[appliedCode] : null;
   const promoResult = promoData ? promoData.apply(subtotal, baseShipping) : null;
@@ -316,14 +501,29 @@ function OrderSummary({ subtotal, itemCount }: OrderSummaryProps) {
         </div>
       </div>
 
-      {/* CTA — visual only / disabled per spec */}
+      {/* CTA */}
       <button
-        disabled
-        className="w-full h-13 rounded-xl bg-[#111] text-white text-sm font-bold uppercase tracking-widest opacity-40 cursor-not-allowed mt-2 py-3"
-        title="Checkout not yet available"
+        onClick={() => setCheckoutOpen(true)}
+        className="w-full h-13 rounded-xl bg-[#111] text-white text-sm font-bold uppercase tracking-widest mt-2 py-3 hover:bg-[#4B5BFF] active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2 group"
       >
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="opacity-60 group-hover:opacity-100 transition-opacity">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
         Proceed to Checkout
       </button>
+
+      {checkoutOpen && (
+        <CheckoutModal
+          total={total}
+          itemCount={itemCount}
+          shipping={shipping}
+          discount={discount}
+          appliedCode={appliedCode}
+          onClose={() => setCheckoutOpen(false)}
+          onConfirm={onConfirmOrder}
+        />
+      )}
 
       {/* Promo code section */}
       <div>
@@ -399,20 +599,9 @@ function OrderSummary({ subtotal, itemCount }: OrderSummaryProps) {
       </div>
 
       <p className="text-center text-xs text-gray-400">
-        Checkout coming soon. Your cart is saved.
+        Free shipping &amp; returns on all orders.
       </p>
 
-      {/* Payment icons */}
-      <div className="flex items-center justify-center gap-2 pt-1">
-        {['Visa', 'MC', 'Amex', 'PayPal'].map((method) => (
-          <span
-            key={method}
-            className="text-[10px] font-bold text-gray-400 border border-gray-200 rounded px-1.5 py-0.5"
-          >
-            {method}
-          </span>
-        ))}
-      </div>
     </div>
   );
 }
@@ -556,12 +745,74 @@ function CartRecommendations() {
   );
 }
 
+// ── Cart skeleton (shown before localStorage hydration) ───────────────────
+function CartPageSkeleton() {
+  return (
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10 animate-pulse">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-8">
+        <div className="space-y-2">
+          <div className="h-8 w-36 bg-gray-200 rounded-lg" />
+          <div className="h-4 w-56 bg-gray-200 rounded" />
+        </div>
+        <div className="h-4 w-16 bg-gray-200 rounded" />
+      </div>
+      {/* Body */}
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-8">
+        <div className="bg-white rounded-2xl border border-gray-100 p-5 space-y-5">
+          {[1, 2].map((i) => (
+            <div key={i} className="flex gap-4 py-4 border-b border-gray-100 last:border-0">
+              <div className="w-24 h-24 rounded-xl bg-gray-200 shrink-0" />
+              <div className="flex-1 space-y-2 pt-1">
+                <div className="h-4 w-3/4 bg-gray-200 rounded" />
+                <div className="h-3 w-1/3 bg-gray-200 rounded" />
+                <div className="h-3 w-1/4 bg-gray-200 rounded" />
+                <div className="h-8 w-28 bg-gray-200 rounded-lg mt-2" />
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="bg-white rounded-2xl border border-gray-100 p-6 space-y-4">
+          <div className="h-5 w-32 bg-gray-200 rounded" />
+          <div className="space-y-3 pt-2">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="flex justify-between">
+                <div className="h-4 w-24 bg-gray-200 rounded" />
+                <div className="h-4 w-16 bg-gray-200 rounded" />
+              </div>
+            ))}
+          </div>
+          <div className="h-12 w-full bg-gray-200 rounded-xl mt-2" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ── Main CartClient ────────────────────────────────────────────────────────
 export function CartClient() {
   const dispatch = useAppDispatch();
+  const router = useRouter();
   const items = useAppSelector(selectCartItems);
   const subtotal = useAppSelector(selectCartSubtotal);
   const itemCount = items.reduce((s, i) => s + i.quantity, 0);
+
+  // Defer rendering until after mount so the server HTML (empty cart)
+  // always matches the initial client render — prevents hydration mismatch
+  // caused by CartHydrator loading localStorage after the first paint.
+  const [hasMounted, setHasMounted] = useState(false);
+  const [redirecting, setRedirecting] = useState(false);
+  useEffect(() => { setHasMounted(true); }, []);
+
+  if (!hasMounted) {
+    return <CartPageSkeleton />;
+  }
+
+  // While navigating to /order-confirmation, render nothing so the
+  // "Your cart is empty" flash never appears between clearCart() and navigation.
+  if (redirecting) {
+    return null;
+  }
 
   if (items.length === 0) {
     return <EmptyCart />;
@@ -617,7 +868,15 @@ export function CartClient() {
         </div>
 
         {/* Right — order summary */}
-        <OrderSummary subtotal={subtotal} itemCount={itemCount} />
+        <OrderSummary
+            subtotal={subtotal}
+            itemCount={itemCount}
+            onConfirmOrder={() => {
+              setRedirecting(true);
+              dispatch(clearCart());
+              router.push('/order-confirmation');
+            }}
+          />
       </div>
 
       {/* Recommendations */}

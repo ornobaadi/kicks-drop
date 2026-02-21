@@ -79,7 +79,7 @@ export async function Footer() {
                 {categories.map((cat) => (
                   <li key={cat.id}>
                     <Link
-                      href={`/products?category=${encodeURIComponent(cat.slug)}`}
+                      href={`/products?category=${cat.id}`}
                       className="text-gray-400 text-sm hover:text-white transition-colors"
                     >
                       {cat.name}
