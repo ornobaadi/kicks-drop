@@ -52,7 +52,7 @@ export function Reviews() {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <h2
-            className="font-black uppercase text-[#111] leading-none"
+            className="font-semibold uppercase text-[#111] leading-none"
             style={{ fontSize: 'clamp(1.8rem, 4vw, 3rem)' }}
           >
             Reviews

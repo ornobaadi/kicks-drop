@@ -27,7 +27,7 @@ export function Categories() {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <h2
-            className="font-black uppercase text-white leading-none"
+            className="font-semibold uppercase text-white leading-none"
             style={{ fontSize: 'clamp(1.8rem, 4vw, 3rem)' }}
           >
             Categories
@@ -37,17 +37,21 @@ export function Categories() {
               onClick={() => setPage((p) => Math.max(0, p - 1))}
               disabled={page === 0}
               aria-label="Previous"
-              className="w-10 h-10 rounded-lg border border-white/25 text-white/60 hover:text-white hover:border-white/60 disabled:opacity-25 transition-all duration-200 flex items-center justify-center text-base font-medium"
+              className="w-10 h-10 rounded-lg bg-white/10 border border-white/20 text-white hover:bg-white/20 disabled:opacity-25 transition-all duration-200 flex items-center justify-center"
             >
-              ‹
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M10 3L5 8L10 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
             </button>
             <button
               onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
               disabled={page >= totalPages - 1}
               aria-label="Next"
-              className="w-10 h-10 rounded-lg border border-white/25 text-white/60 hover:text-white hover:border-white/60 disabled:opacity-25 transition-all duration-200 flex items-center justify-center text-base font-medium"
+              className="w-10 h-10 rounded-lg bg-white/10 border border-white/20 text-white hover:bg-white/20 disabled:opacity-25 transition-all duration-200 flex items-center justify-center"
             >
-              ›
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M6 3L11 8L6 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
             </button>
           </div>
         </div>
@@ -75,25 +79,27 @@ export function Categories() {
                 key={cat.id}
                 href={`/products?category=${cat.id}`}
                 className="group relative bg-white rounded-2xl overflow-hidden cursor-pointer block"
-                style={{ minHeight: '340px' }}
+                style={{ minHeight: '360px' }}
               >
                 {/* Image */}
-                <div className="absolute inset-0">
-                  <Image
-                    src={cat.image}
-                    alt={cat.name}
-                    fill
-                    sizes="(max-width: 640px) 100vw, 50vw"
-                    className="object-contain p-10 transition-transform duration-500 group-hover:scale-105"
-                    onError={(e) => {
-                      (e.currentTarget as HTMLImageElement).style.display = 'none';
-                    }}
-                  />
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="relative w-full h-full">
+                    <Image
+                      src={cat.image}
+                      alt={cat.name}
+                      fill
+                      sizes="(max-width: 640px) 100vw, 50vw"
+                      className="object-contain p-12 transition-transform duration-500 group-hover:scale-105"
+                      onError={(e) => {
+                        (e.currentTarget as HTMLImageElement).style.display = 'none';
+                      }}
+                    />
+                  </div>
                 </div>
 
                 {/* Bottom bar */}
                 <div className="absolute bottom-0 left-0 right-0 flex items-end justify-between p-5">
-                  <h3 className="font-black uppercase text-[#111] text-xl sm:text-2xl leading-tight">
+                  <h3 className="font-semibold uppercase text-[#111] text-xl sm:text-2xl leading-tight">
                     {cat.name
                       .split(' ')
                       .reduce<string[][]>((acc, word) => {
@@ -114,7 +120,7 @@ export function Categories() {
                   </h3>
 
                   {/* Arrow button */}
-                  <div className="w-10 h-10 rounded-lg bg-black flex items-center justify-center shrink-0 ml-3 group-hover:bg-[#4B5BFF] transition-colors duration-200">
+                  <div className="w-11 h-11 rounded-xl bg-[#111] flex items-center justify-center shrink-0 ml-3 group-hover:bg-[#4B5BFF] transition-colors duration-200">
                     <svg
                       width="16"
                       height="16"

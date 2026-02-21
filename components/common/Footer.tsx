@@ -80,7 +80,7 @@ export async function Footer() {
                 {categories.map((cat) => (
                   <li key={cat.id}>
                     <Link
-                      href={`/products?category=${cat.id}`}
+                      href={`/products?category=${encodeURIComponent(cat.slug)}`}
                       className="text-gray-400 text-sm hover:text-white transition-colors"
                     >
                       {cat.name}
@@ -129,13 +129,14 @@ export async function Footer() {
 
           {/* Giant KICKS — full-width, only top half visible */}
           <div
-            className="overflow-hidden select-none text-center w-full"
-            style={{ height: 'clamp(4.5rem, 14vw, 10rem)' }}
+            className="overflow-hidden select-none text-center w-full flex items-start justify-center"
+            style={{ height: 'clamp(7rem, 20vw, 16rem)' }}
           >
             <KicksLogo
               asLink={false}
-              fontSize="clamp(9rem, 28vw, 20rem)"
+              fontSize="clamp(14rem, 24vw, 30rem)"
               color="text-white"
+              strokeColor="#111111"
             />
           </div>
         </div>

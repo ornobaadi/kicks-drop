@@ -134,7 +134,7 @@ export function Header() {
                       render={<Link href="/#new-drops" />}
                       className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-semibold text-gray-800 hover:text-black hover:bg-gray-50 transition-colors"
                     >
-                      <span>🔥</span> New Drops
+                      New Drops <span>🔥</span> 
                     </NavigationMenuLink>
                   </NavigationMenuItem>
 
@@ -205,7 +205,7 @@ export function Header() {
 
             {/* Logo — absolute center */}
             <div className="absolute left-1/2 -translate-x-1/2">
-              <KicksLogo size="text-[22px]" />
+              <KicksLogo size="text-[22px]" strokeColor="white" />
             </div>
 
             {/* Right icons */}
@@ -235,7 +235,7 @@ export function Header() {
                 className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-base font-semibold text-gray-800 hover:bg-gray-50 hover:text-black transition-colors"
                 onClick={() => setMobileOpen(false)}
               >
-                <span>🔥</span> New Drops
+                New Drops <span>🔥</span> 
               </Link>
               <MobileCategorySection
                 label="Men"

@@ -10,6 +10,8 @@ interface KicksLogoProps {
   /** Applied to the outer wrapper so overlapping letters don't compound opacity. */
   opacity?: number;
   asLink?: boolean;
+  /** Background color used as the C's outline stroke so it visually separates from K. E.g. 'white', '#4B5BFF', '#111111' */
+  strokeColor?: string;
 }
 
 /**
@@ -22,12 +24,14 @@ function LogoText({
   className,
   color = 'text-black',
   opacity,
+  strokeColor,
 }: {
   size?: string;
   fontSize?: string;
   className?: string;
   color?: string;
   opacity?: number;
+  strokeColor?: string;
 }) {
   return (
     <span
@@ -41,19 +45,33 @@ function LogoText({
     >
       <span>K</span>
       <span>I</span>
-      {/* C slides into K's space; K is explicitly stacked above to cover C's antialiased edge */}
-      <span style={{ marginRight: '-0.13em', position: 'relative', zIndex: 0 }}>C</span>
+      {/* C slides into K's space; C sits on top with a bg-colored stroke so its outline shows visibly over K */}
+      <span
+        style={{
+          marginRight: '-0.13em',
+          position: 'relative',
+          zIndex: 2,
+          ...(strokeColor
+            ? {
+                WebkitTextStroke: `0.07em ${strokeColor}`,
+                paintOrder: 'stroke fill',
+              }
+            : {}),
+        }}
+      >
+        C
+      </span>
       <span style={{ position: 'relative', zIndex: 1 }}>K</span>
       <span>S</span>
     </span>
   );
 }
 
-export function KicksLogo({ size, fontSize, className, color, opacity, asLink = true }: KicksLogoProps) {
-  if (!asLink) return <LogoText size={size} fontSize={fontSize} className={className} color={color} opacity={opacity} />;
+export function KicksLogo({ size, fontSize, className, color, opacity, asLink = true, strokeColor }: KicksLogoProps) {
+  if (!asLink) return <LogoText size={size} fontSize={fontSize} className={className} color={color} opacity={opacity} strokeColor={strokeColor} />;
   return (
     <Link href="/" aria-label="KICKS home">
-      <LogoText size={size} fontSize={fontSize} className={className} color={color} opacity={opacity} />
+      <LogoText size={size} fontSize={fontSize} className={className} color={color} opacity={opacity} strokeColor={strokeColor} />
     </Link>
   );
 }

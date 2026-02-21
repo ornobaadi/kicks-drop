@@ -23,7 +23,7 @@ export function Newsletter() {
         <div className="flex flex-col md:flex-row items-center justify-between px-8 sm:px-12 py-10 gap-8">
           {/* Left content */}
           <div className="flex-1 min-w-0">
-            <h2 className="text-white font-black text-3xl sm:text-4xl leading-tight uppercase mb-1">
+            <h2 className="text-white font-semibold text-3xl sm:text-4xl leading-tight uppercase mb-1">
               JOIN OUR KICKSPLUS<br />
               CLUB &amp; GET 15% OFF
             </h2>
@@ -68,8 +68,9 @@ export function Newsletter() {
               asLink={false}
               fontSize="clamp(4rem, 11vw, 7rem)"
               color="text-white"
+              strokeColor="#4B5BFF"
             />
-            <span className="absolute top-0 right-0 w-6 h-6 rounded-full bg-orange-400 translate-x-1/3 -translate-y-1/3 flex items-center justify-center text-white font-black text-sm leading-none">
+            <span className="absolute top-0 right-0 w-6 h-6 rounded-full bg-orange-400 translate-x-1/3 -translate-y-1/3 flex items-center justify-center text-white font-semibold text-sm leading-none">
               +
             </span>
           </div>

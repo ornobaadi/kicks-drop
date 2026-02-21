@@ -16,7 +16,16 @@ export function NewDrops() {
     if (items.length === 0) dispatch(fetchProducts(20));
   }, [dispatch, items.length]);
 
-  const products = items.filter((p) => p.images?.length > 0 && p.images[0]).slice(0, 8);
+  const allProducts = items.filter((p) => p.images?.length > 0 && p.images[0]);
+  // Prefer 4 items but replace the 4th if it has a very short title
+  let products = allProducts.slice(0, 4);
+  if (products.length === 4) {
+    const fourth = products[3];
+    if ((fourth.title || '').length < 20) {
+      const replacement = allProducts.slice(4).find((p) => (p.title || '').length >= 20);
+      if (replacement) products[3] = replacement;
+    }
+  }
 
   return (
     <section id="new-drops" className="bg-[#e7e7e3] px-4 sm:px-6 py-14">
@@ -24,7 +33,7 @@ export function NewDrops() {
         {/* Header row */}
         <div className="flex items-start justify-between gap-4 mb-8">
           <h2
-            className="font-black uppercase text-[#111] leading-none"
+            className="font-semibold uppercase text-[#111] leading-none"
             style={{ fontSize: 'clamp(1.8rem, 4vw, 3rem)' }}
           >
             Don&apos;t Miss Out

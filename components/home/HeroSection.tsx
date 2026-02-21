@@ -12,13 +12,7 @@ function cleanImageUrl(raw: string): string {
 
 function HeroSkeleton() {
   return (
-    <div className="animate-pulse flex gap-3" style={{ minHeight: '440px' }}>
-      <div className="flex-1 rounded-2xl bg-gray-200" />
-      <div className="flex flex-col gap-3 w-[28%] max-w-50">
-        <div className="flex-1 rounded-2xl bg-gray-200" />
-        <div className="flex-1 rounded-2xl bg-gray-200" />
-      </div>
-    </div>
+    <div className="animate-pulse rounded-2xl bg-gray-200" style={{ minHeight: '440px' }} />
   );
 }
 
@@ -31,11 +25,16 @@ export function HeroSection() {
     if (items.length === 0) dispatch(fetchProducts(20));
   }, [dispatch, items.length]);
 
-  // Only use products that have at least one image
-  const withImages = items.filter((p) => p.images?.length > 0 && p.images[0]);
-  const hero = withImages[0] ?? null;
-  const thumb1 = withImages[1] ?? null;
-  const thumb2 = withImages[2] ?? null;
+  // Pick the first product with multiple images so we can show alternate angles
+  const hero =
+    items.find((p) => {
+      const imgs = (p.images ?? []).map(cleanImageUrl).filter(Boolean);
+      return imgs.length >= 3;
+    }) ??
+    items.find((p) => (p.images ?? []).length > 0) ??
+    null;
+
+  const heroImages = hero ? hero.images.map(cleanImageUrl).filter(Boolean) : [];
 
   // ── FitText: dynamically scale heading to fill container width ──
   const headingRef = useRef<HTMLHeadingElement>(null);
@@ -82,95 +81,78 @@ export function HeroSection() {
         {loading && items.length === 0 ? (
           <HeroSkeleton />
         ) : (
-          <div className="flex gap-3 items-stretch" style={{ minHeight: '440px' }}>
-            {/* Large hero card */}
-            <div className="relative flex-1 rounded-2xl overflow-hidden bg-[#c8ad87]">
-              {/* Vertical side badge */}
-              <div className="absolute left-0 top-0 bottom-0 w-7.5 z-10 flex items-center justify-center bg-black/30 backdrop-blur-[1px]">
-                <span
-                  className="text-white text-[8px] font-semibold uppercase tracking-[0.22em] whitespace-nowrap select-none"
-                  style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}
-                >
-                  Nike product of the year
-                </span>
-              </div>
-
-              {/* Image */}
-              {hero && hero.images?.[0] && (
-                <div className="absolute inset-0">
-                  <Image
-                    src={cleanImageUrl(hero.images[0])}
-                    alt={hero.title}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 70vw"
-                    className="object-cover"
-                    priority
-                    onError={(e) => {
-                      (e.currentTarget as HTMLImageElement).style.display = 'none';
-                    }}
-                  />
-                </div>
-              )}
-
-              {/* Bottom overlay */}
-              <div className="absolute bottom-0 left-0 right-0 bg-linear-to-t from-black/80 via-black/30 to-transparent p-6 pl-12">
-                <h2 className="text-white font-black uppercase text-2xl sm:text-3xl lg:text-4xl leading-tight">
-                  {hero?.title ?? 'NIKE AIR MAX'}
-                </h2>
-                <p
-                  className="text-white/70 text-sm mt-1.5 mb-5 max-w-xs leading-relaxed"
-                  style={{ fontFamily: 'var(--font-body)' }}
-                >
-                  {hero
-                    ? hero.description.slice(0, 65) + (hero.description.length > 65 ? '…' : '')
-                    : "Nike introducing the new air max for everyone's comfort"}
-                </p>
-                <Link
-                  href={hero ? `/products/${hero.id}` : '/products'}
-                  className="inline-block bg-[#4B5BFF] text-white text-[11px] font-bold uppercase tracking-widest px-5 py-3 rounded-lg hover:bg-[#3a47e0] transition-colors duration-200"
-                >
-                  Shop Now
-                </Link>
-              </div>
+          <div className="relative rounded-2xl overflow-hidden bg-[#c8ad87]" style={{ minHeight: '540px' }}>
+            {/* Vertical side badge */}
+            <div className="absolute left-0 top-0 bottom-0 w-7.5 z-10 flex items-center justify-center bg-black/30 backdrop-blur-[1px]">
+              <span
+                className="text-white text-[8px] font-semibold uppercase tracking-[0.22em] whitespace-nowrap select-none"
+                style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}
+              >
+                Kicks product of the year
+              </span>
             </div>
 
-            {/* Right thumbnails */}
-            <div className="hidden sm:flex flex-col gap-3 w-[27%] max-w-52.5">
-              {thumb1 && thumb1.images?.[0] && (
-                <Link
-                  href={`/products/${thumb1.id}`}
-                  className="group relative flex-1 rounded-2xl overflow-hidden bg-[#d4c4ae] min-h-35"
-                >
-                  <Image
-                    src={cleanImageUrl(thumb1.images[0])}
-                    alt={thumb1.title}
-                    fill
-                    sizes="210px"
-                    className="object-cover group-hover:scale-105 transition-transform duration-400"
-                    onError={(e) => {
-                      (e.currentTarget as HTMLImageElement).style.display = 'none';
-                    }}
-                  />
-                </Link>
-              )}
-              {thumb2 && thumb2.images?.[0] && (
-                <Link
-                  href={`/products/${thumb2.id}`}
-                  className="group relative flex-1 rounded-2xl overflow-hidden bg-[#bfaf99] min-h-35"
-                >
-                  <Image
-                    src={cleanImageUrl(thumb2.images[0])}
-                    alt={thumb2.title}
-                    fill
-                    sizes="210px"
-                    className="object-cover group-hover:scale-105 transition-transform duration-400"
-                    onError={(e) => {
-                      (e.currentTarget as HTMLImageElement).style.display = 'none';
-                    }}
-                  />
-                </Link>
-              )}
+            {/* Main hero image */}
+            {heroImages[0] && (
+              <div className="absolute inset-0">
+                <Image
+                  src={heroImages[0]}
+                  alt={hero?.title ?? 'Featured product'}
+                  fill
+                  sizes="(max-width: 768px) 100vw, 100vw"
+                  className="object-cover"
+                  priority
+                  onError={(e) => {
+                    (e.currentTarget as HTMLImageElement).style.display = 'none';
+                  }}
+                />
+              </div>
+            )}
+
+            {/* Bottom overlay with text */}
+            <div className="absolute bottom-0 left-0 right-0 bg-linear-to-t from-black/80 via-black/30 to-transparent p-6 pl-12">
+              <h2 className="text-white font-black uppercase text-2xl sm:text-3xl lg:text-4xl leading-tight">
+                {hero?.title ?? 'KICKS AIR MAX'}
+              </h2>
+              <p
+                className="text-white/70 text-sm mt-1.5 mb-5 max-w-xs leading-relaxed"
+                style={{ fontFamily: 'var(--font-body)' }}
+              >
+                {hero
+                  ? hero.description.slice(0, 65) + (hero.description.length > 65 ? '…' : '')
+                  : "Discover the latest drop crafted for everyone's comfort"}
+              </p>
+              <Link
+                href={hero ? `/products/${hero.id}` : '/products'}
+                className="inline-block bg-[#4B5BFF] text-white text-[11px] font-bold uppercase tracking-widest px-5 py-3 rounded-lg hover:bg-[#3a47e0] transition-colors duration-200"
+              >
+                Shop Now
+              </Link>
             </div>
+
+            {/* Right-bottom product thumbnails (same product, different angles) */}
+            {heroImages.length >= 2 && (
+              <div className="hidden sm:flex absolute right-4 lg:right-6 bottom-4 lg:bottom-6 z-10 flex-col gap-3">
+                {heroImages.slice(1, 3).map((img, i) => (
+                  <Link
+                    key={i}
+                    href={hero ? `/products/${hero.id}` : '/products'}
+                    className="group relative w-28 h-28 lg:w-36 lg:h-36 rounded-2xl overflow-hidden ring-[3px] ring-white/40 shadow-lg hover:ring-white/70 transition-all duration-300"
+                  >
+                    <Image
+                      src={img}
+                      alt={`${hero?.title ?? 'Product'} view ${i + 2}`}
+                      fill
+                      sizes="144px"
+                      className="object-cover group-hover:scale-110 transition-transform duration-400"
+                      onError={(e) => {
+                        (e.currentTarget as HTMLImageElement).style.display = 'none';
+                      }}
+                    />
+                  </Link>
+                ))}
+              </div>
+            )}
           </div>
         )}
       </div>

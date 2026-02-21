@@ -21,21 +21,22 @@ export function ProductCard({ product }: ProductCardProps) {
 
   return (
     <Link href={`/products/${product.id}`} className="group block">
-      <div className="relative bg-white rounded-xl border border-gray-100 overflow-hidden transition-shadow duration-200 hover:shadow-md">
+      {/* Image card */}
+      <div className="relative bg-[#e7e7e3] rounded-3xl ring-4 ring-white overflow-hidden mb-4">
         {/* New badge */}
-        <span className="absolute top-3 left-3 z-10 bg-blue-600 text-white text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-sm">
+        <span className="absolute top-3 left-3 z-10 bg-[#4B5BFF] text-white text-sm font-bold px-4 py-1.5 rounded-xl">
           New
         </span>
 
         {/* Product image */}
-        <div className="relative w-full aspect-square bg-gray-50 overflow-hidden">
+        <div className="relative w-full aspect-5/6 overflow-hidden">
           {imageUrl ? (
             <Image
               src={imageUrl}
               alt={product.title}
               fill
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-              className="object-contain p-4 transition-transform duration-300 group-hover:scale-105"
+              className="object-cover transition-transform duration-300 group-hover:scale-105"
               onError={(e) => {
                 (e.currentTarget as HTMLImageElement).style.display = 'none';
               }}
@@ -49,21 +50,18 @@ export function ProductCard({ product }: ProductCardProps) {
             </div>
           )}
         </div>
+      </div>
 
-        {/* Name */}
-        <div className="px-3 pt-3 pb-1">
-          <p className="font-bold text-xs uppercase tracking-wide text-gray-900 line-clamp-2 leading-tight">
-            {product.title}
-          </p>
-        </div>
+      {/* Name */}
+      <h3 className="font-bold text-base sm:text-lg uppercase tracking-wide text-[#111] line-clamp-2 leading-tight mb-3 px-1">
+        {product.title}
+      </h3>
 
-        {/* CTA button */}
-        <div className="px-3 pb-3 pt-2">
-          <div className="flex items-center justify-between bg-black text-white rounded-md px-3 py-2 text-[11px] font-semibold uppercase tracking-wider group-hover:bg-gray-800 transition-colors duration-200">
-            <span>View Product</span>
-            <span className="text-blue-400">{formattedPrice}</span>
-          </div>
-        </div>
+      {/* CTA button */}
+      <div className="flex items-center justify-center gap-1.5 bg-[#111] text-white rounded-2xl px-4 py-4 text-sm font-bold uppercase tracking-widest group-hover:bg-[#222] transition-colors duration-200">
+        <span>View Product</span>
+        <span className="text-white/40">-</span>
+        <span className="text-[#FF8C00]">{formattedPrice}</span>
       </div>
     </Link>
   );
