@@ -105,10 +105,10 @@ export function ProductActions({ product, selectedColor, selectedSize, needsColo
           dispatch(addItem({ product, color: selectedColor ?? '', size: selectedSize ?? '' }));
           router.push('/cart');
         }}
-        className={`w-full h-12 rounded-xl text-sm font-bold uppercase tracking-widest transition-all duration-200 border-2
+        className={`w-full h-12 rounded-xl text-sm font-bold uppercase tracking-widest transition-all duration-200
           ${ready
-            ? 'border-[#4B5BFF] text-[#4B5BFF] hover:bg-[#4B5BFF] hover:text-white active:scale-[0.98]'
-            : 'border-gray-200 text-gray-400 cursor-not-allowed'
+            ? 'bg-[#4B5BFF] text-white hover:bg-[#3a47e0] active:scale-[0.98]'
+            : 'border-2 border-gray-200 text-gray-400 cursor-not-allowed'
           }`}
       >
         Buy it Now

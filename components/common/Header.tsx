@@ -16,14 +16,7 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu';
-import { HugeiconsIcon } from '@hugeicons/react';
-import {
-  User02Icon,
-  ShoppingCart01Icon,
-  Menu01Icon,
-  Cancel01Icon,
-  ArrowDown01Icon,
-} from '@hugeicons/core-free-icons';
+import { User, ShoppingCart, Menu, X, ChevronDown } from 'lucide-react';
 import type { Category } from '@/types/category';
 
 /* ── Category dropdown card ── */
@@ -74,8 +67,7 @@ function MobileCategorySection({
         onClick={() => setOpen((o) => !o)}
       >
         {label}
-        <HugeiconsIcon
-          icon={ArrowDown01Icon}
+        <ChevronDown
           size={15}
           className={`text-gray-400 transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
         />
@@ -200,7 +192,7 @@ export function Header() {
               onClick={() => setMobileOpen((o) => !o)}
               aria-label="Toggle menu"
             >
-              <HugeiconsIcon icon={mobileOpen ? Cancel01Icon : Menu01Icon} size={22} color="#111" />
+              {mobileOpen ? <X size={22} color="#111" /> : <Menu size={22} color="#111" />}
             </button>
 
             {/* Logo — absolute center */}
@@ -214,10 +206,10 @@ export function Header() {
                 <GlobalSearch variant="desktop" />
               </div>
               <Link href="/account" aria-label="Account" className="p-2 rounded-lg hover:bg-gray-100 transition-colors">
-                <HugeiconsIcon icon={User02Icon} size={20} color="#111" />
+                <User size={20} color="#111" />
               </Link>
               <Link href="/cart" aria-label="Cart" className="relative p-2 rounded-lg hover:bg-gray-100 transition-colors">
-                <HugeiconsIcon icon={ShoppingCart01Icon} size={20} color="#111" />
+                <ShoppingCart size={20} color="#111" />
                 {cartCount > 0 && (
                   <span className="absolute -top-0.5 -right-0.5 min-w-4.5 h-4.5 flex items-center justify-center rounded-full bg-orange-500 text-white text-[10px] font-bold leading-none px-1">
                     {cartCount > 99 ? '99+' : cartCount}

@@ -4,8 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { HugeiconsIcon } from '@hugeicons/react';
-import { Search01Icon, Cancel01Icon } from '@hugeicons/core-free-icons';
+import { Search, X } from 'lucide-react';
 import { productsAPI } from '@/lib/api/products';
 import type { Product } from '@/types/product';
 
@@ -129,12 +128,12 @@ export function GlobalSearch({ variant = 'desktop', onNavigate }: GlobalSearchPr
             onClick={openSearch}
             className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-base font-semibold text-gray-800 hover:bg-gray-50 transition-colors w-full text-left"
           >
-            <HugeiconsIcon icon={Search01Icon} size={18} color="#111" />
+            <Search size={18} color="#111" />
             Search
           </button>
         ) : (
           <div className="flex items-center gap-2 px-3 py-2">
-            <HugeiconsIcon icon={Search01Icon} size={16} color="#9ca3af" />
+            <Search size={16} color="#9ca3af" />
             <input
               ref={inputRef}
               value={query}
@@ -144,7 +143,7 @@ export function GlobalSearch({ variant = 'desktop', onNavigate }: GlobalSearchPr
               className="flex-1 text-sm bg-transparent outline-none text-[#111] placeholder-gray-400"
             />
             <button onClick={close} className="text-gray-400 hover:text-gray-600 transition-colors">
-              <HugeiconsIcon icon={Cancel01Icon} size={16} color="currentColor" />
+              <X size={16} color="currentColor" />
             </button>
           </div>
         )}
@@ -172,13 +171,13 @@ export function GlobalSearch({ variant = 'desktop', onNavigate }: GlobalSearchPr
           aria-label="Search"
           className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
         >
-          <HugeiconsIcon icon={Search01Icon} size={20} color="#111" />
+          <Search size={20} color="#111" />
         </button>
       ) : (
         <div className="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 w-64 focus-within:border-[#4B5BFF] focus-within:ring-2 focus-within:ring-[#4B5BFF]/20 transition-all">
           {loading
             ? <svg className="animate-spin w-3.75 h-3.75 text-gray-400 shrink-0" viewBox="0 0 24 24" fill="none"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"/></svg>
-            : <HugeiconsIcon icon={Search01Icon} size={15} color="#9ca3af" className="shrink-0" />
+            : <Search size={15} color="#9ca3af" className="shrink-0" />
           }
           <input
             ref={inputRef}
@@ -189,7 +188,7 @@ export function GlobalSearch({ variant = 'desktop', onNavigate }: GlobalSearchPr
             className="flex-1 text-sm bg-transparent outline-none text-[#111] placeholder-gray-400 min-w-0"
           />
           <button onClick={close} className="text-gray-300 hover:text-gray-500 transition-colors shrink-0">
-            <HugeiconsIcon icon={Cancel01Icon} size={14} color="currentColor" />
+            <X size={14} color="currentColor" />
           </button>
         </div>
       )}

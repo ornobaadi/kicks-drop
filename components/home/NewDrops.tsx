@@ -49,7 +49,7 @@ export function NewDrops({ initialProducts = [] }: NewDropsProps) {
           <div className="shrink-0 mt-1">
             <Link
               href="/products"
-              className="inline-block bg-[#4B5BFF] text-white text-[10px] font-bold uppercase tracking-widest px-4 py-2.5 rounded-lg hover:bg-[#3a47e0] transition-colors duration-200 whitespace-nowrap"
+              className="inline-block bg-[#4B5BFF] text-white text-xs font-bold uppercase tracking-widest px-6 py-3.5 rounded-lg hover:bg-[#3a47e0] transition-colors duration-200 whitespace-nowrap"
             >
               Shop New Drops
             </Link>
