@@ -40,7 +40,7 @@ export function RelatedProducts({ categoryId, excludeId }: RelatedProductsProps)
   if (!loading && filtered.length === 0) return null;
 
   return (
-    <section className="bg-white px-4 sm:px-6 py-14">
+    <section className="bg-[#e7e7e3] px-4 sm:px-6 py-14">
       <div className="max-w-7xl mx-auto">
         <div className="flex items-center justify-between mb-8">
           <h2

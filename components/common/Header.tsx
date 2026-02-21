@@ -41,8 +41,9 @@ export function Header() {
                 href={link.href}
                 className="flex items-center gap-1 text-sm font-semibold text-gray-800 hover:text-black transition-colors"
               >
-                {link.fire && <span>🔥</span>}
+                
                 {link.label}
+                {link.fire && <span>🔥</span>}
                 {link.dropdown && (
                   <svg width="10" height="6" viewBox="0 0 10 6" fill="none" className="ml-0.5 opacity-50">
                     <path d="M1 1l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />

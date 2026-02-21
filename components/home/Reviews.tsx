@@ -47,7 +47,7 @@ function StarRating({ count }: { count: number }) {
 
 export function Reviews() {
   return (
-    <section className="bg-[#eeece8] px-4 sm:px-6 py-14">
+    <section className="bg-[#e7e7e3] px-4 sm:px-6 py-14">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">

@@ -119,7 +119,7 @@ export function ProductDetailClient({ id }: ProductDetailClientProps) {
       {/* ── Breadcrumb ── */}
       <nav
         aria-label="Breadcrumb"
-        className="bg-[#fafaf9] border-b border-gray-100 px-4 sm:px-6 py-3"
+        className="bg-[#e7e7e3] border-b border-gray-100 px-4 sm:px-6 py-3"
       >
         <ol className="max-w-7xl mx-auto flex items-center gap-1.5 text-xs text-gray-400 flex-wrap">
           <li>
@@ -130,7 +130,7 @@ export function ProductDetailClient({ id }: ProductDetailClientProps) {
           <li aria-hidden className="select-none">/</li>
           <li>
             <Link
-              href={`/?category=${product.category.id}`}
+              href={`/products?category=${product.category.id}`}
               className="hover:text-[#111] transition-colors font-medium capitalize"
             >
               {product.category.name}
@@ -144,7 +144,7 @@ export function ProductDetailClient({ id }: ProductDetailClientProps) {
       </nav>
 
       {/* ── Product layout ── */}
-      <section className="bg-[#fafaf9] px-4 sm:px-6 py-10">
+      <section className="bg-[#e7e7e3] px-4 sm:px-6 py-10">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-start">
             {/* Left — gallery */}

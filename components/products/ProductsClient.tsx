@@ -231,7 +231,7 @@ export function ProductsClient() {
 
   // ── render ────────────────────────────────────────────────────────────────
   return (
-    <main className="min-h-screen bg-[#fafaf9]">
+    <main className="min-h-screen bg-[#e7e7e3]">
 
       {/* ── page header ── */}
       <div className="bg-[#111] px-4 sm:px-6 py-12">

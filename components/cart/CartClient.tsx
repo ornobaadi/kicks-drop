@@ -118,7 +118,7 @@ function CartItemRow({
     <div className="flex gap-4 py-5 border-b border-gray-100 last:border-0">
       {/* Thumbnail */}
       <Link href={`/products/${productId}`} className="shrink-0">
-        <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-xl overflow-hidden bg-[#f4f3f0]">
+        <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-xl overflow-hidden bg-[#e7e7e3]">
           {imageUrl ? (
             <Image
               src={imageUrl}
@@ -206,7 +206,7 @@ function OrderSummary({ subtotal, itemCount }: OrderSummaryProps) {
 
       {/* Free shipping progress */}
       {shipping > 0 && (
-        <div className="bg-[#eeece8] rounded-xl p-3">
+        <div className="bg-[#e7e7e3] rounded-xl p-3">
           <p className="text-xs text-gray-600 mb-2">
             Add <span className="font-bold text-[#4B5BFF]">{fmt(toFreeShipping)}</span> more for free shipping!
           </p>

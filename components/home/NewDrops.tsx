@@ -19,7 +19,7 @@ export function NewDrops() {
   const products = items.filter((p) => p.images?.length > 0 && p.images[0]).slice(0, 8);
 
   return (
-    <section id="new-drops" className="bg-white px-4 sm:px-6 py-14">
+    <section id="new-drops" className="bg-[#e7e7e3] px-4 sm:px-6 py-14">
       <div className="max-w-7xl mx-auto">
         {/* Header row */}
         <div className="flex items-start justify-between gap-4 mb-8">

@@ -21,7 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${rubik.variable} ${openSans.variable}`}>
-      <body className="antialiased font-sans">
+      <body className="antialiased font-sans bg-[#e7e7e3]">
         <ReduxProvider>
           <Header />
           {children}

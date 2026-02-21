@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useAppDispatch } from '@/store/hooks';
 import { addItem } from '@/store/slices/cartSlice';
 import type { Product } from '@/types/product';
@@ -15,6 +16,7 @@ interface ProductActionsProps {
 
 export function ProductActions({ product, selectedColor, selectedSize, needsColor = true, needsSize = true }: ProductActionsProps) {
   const dispatch = useAppDispatch();
+  const router = useRouter();
   const [adding, setAdding] = useState(false);
   const [added, setAdded] = useState(false);
   const [wishlist, setWishlist] = useState(false);
@@ -98,6 +100,11 @@ export function ProductActions({ product, selectedColor, selectedSize, needsColo
       {/* Buy it Now */}
       <button
         disabled={!ready}
+        onClick={() => {
+          if (!ready) return;
+          dispatch(addItem({ product, color: selectedColor ?? '', size: selectedSize ?? '' }));
+          router.push('/cart');
+        }}
         className={`w-full h-12 rounded-xl text-sm font-bold uppercase tracking-widest transition-all duration-200 border-2
           ${ready
             ? 'border-[#4B5BFF] text-[#4B5BFF] hover:bg-[#4B5BFF] hover:text-white active:scale-[0.98]'
